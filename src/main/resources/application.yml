@@ -22,12 +22,7 @@ spring:
      mongodb:
        uri: mongodb://ztgeo:123456@127.0.0.1:27017/http_db
 server:
-  port: 443
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: hu1992325
-    keyStoreType: PKCS12
-    keyAlias: tomcat
+  port: 8001
 zuul:
   ignored-patterns: /ztgeoNotice/**,/route/**
   host:
