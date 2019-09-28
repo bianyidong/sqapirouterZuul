@@ -54,7 +54,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 0;
+        return -77;
     }
 
     @Override
@@ -89,7 +89,6 @@ public class NationalSharedReqFilter extends ZuulFilter {
         try {
             RequestContext requestContext = RequestContext.getCurrentContext();
             HttpServletRequest httpServletRequest = requestContext.getRequest();
-            String fromUser = httpServletRequest.getHeader("from_user");
             String api_id = httpServletRequest.getHeader("api_id");
 
             String userName = httpServletRequest.getHeader("userName");
@@ -98,7 +97,10 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
             System.out.println("请求方头信息：" + userName + "\t" + requestType + "\t" + businessNumber);
 
-            ApiNotionalSharedConfig apiNotionalSharedConfig = apiNotionalSharedConfigRepository.findById(fromUser).get();
+            ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.queryApiBaseInfoByApiId(api_id);
+            String apiOwnerid = apiBaseInfo.getApiOwnerId();
+
+            ApiNotionalSharedConfig apiNotionalSharedConfig = apiNotionalSharedConfigRepository.findById(apiOwnerid).get();
             log.info("获取国家配置信息：" + JSONObject.toJSONString(apiNotionalSharedConfig));
 
             String id = apiNotionalSharedConfig.getId();

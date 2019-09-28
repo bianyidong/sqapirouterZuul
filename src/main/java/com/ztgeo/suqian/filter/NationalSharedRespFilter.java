@@ -13,6 +13,8 @@ import com.ztgeo.suqian.repository.ApiNotionalSharedConfigRepository;
 import com.ztgeo.suqian.repository.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.RSAUtils;
 import com.ztgeo.suqian.utils.StreamOperateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -29,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component//
 public class NationalSharedRespFilter extends ZuulFilter {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private ApiUserFilterRepository apiUserFilterRepository;
@@ -55,6 +59,7 @@ public class NationalSharedRespFilter extends ZuulFilter {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         String api_id = httpServletRequest.getHeader("api_id");
+        String fromUser = httpServletRequest.getHeader("from_user");
 
         ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.queryApiBaseInfoByApiId(api_id);
         String apiOwnerid = apiBaseInfo.getApiOwnerId();
@@ -82,7 +87,10 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
             String api_id = httpServletRequest.getHeader("api_id");
 
-            ApiNotionalSharedConfig apiNotionalSharedConfig = apiNotionalSharedConfigRepository.findById(api_id).get();
+            ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.queryApiBaseInfoByApiId(api_id);
+            String apiOwnerid = apiBaseInfo.getApiOwnerId();
+
+            ApiNotionalSharedConfig apiNotionalSharedConfig = apiNotionalSharedConfigRepository.findById(apiOwnerid).get();
 
 
             InputStream inputStream = requestContext.getResponseDataStream();
@@ -98,7 +106,7 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
             responseBodyJson.put("data",decodeRespStr);
 
-
+            log.info("响应报文：" + decodeRespStr);
             requestContext.setResponseBody(responseBodyJson.toJSONString());
 
 
