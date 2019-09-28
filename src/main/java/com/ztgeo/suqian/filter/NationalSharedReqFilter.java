@@ -14,6 +14,8 @@ import com.ztgeo.suqian.repository.ApiNotionalSharedConfigRepository;
 import com.ztgeo.suqian.repository.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.RSAUtils;
 import io.micrometer.core.instrument.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,6 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class NationalSharedReqFilter extends ZuulFilter {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private ApiUserFilterRepository apiUserFilterRepository;
@@ -66,6 +70,8 @@ public class NationalSharedReqFilter extends ZuulFilter {
         int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
         int configCount = apiNotionalSharedConfigRepository.countApiNotionalSharedConfigsByUseridEquals(apiOwnerid);
 
+        log.info("国家级过滤器：userCount:" + useCount + "，configCount：" + configCount );
+
         if(useCount == 0){
             return false;
         }else {
@@ -83,13 +89,17 @@ public class NationalSharedReqFilter extends ZuulFilter {
         try {
             RequestContext requestContext = RequestContext.getCurrentContext();
             HttpServletRequest httpServletRequest = requestContext.getRequest();
+            String fromUser = httpServletRequest.getHeader("from_user");
             String api_id = httpServletRequest.getHeader("api_id");
 
             String userName = httpServletRequest.getHeader("userName");
             String requestType = httpServletRequest.getHeader("requestType");
             String businessNumber = httpServletRequest.getHeader("businessNumber");
 
-            ApiNotionalSharedConfig apiNotionalSharedConfig = apiNotionalSharedConfigRepository.findById(api_id).get();
+            System.out.println("请求方头信息：" + userName + "\t" + requestType + "\t" + businessNumber);
+
+            ApiNotionalSharedConfig apiNotionalSharedConfig = apiNotionalSharedConfigRepository.findById(fromUser).get();
+            log.info("获取国家配置信息：" + JSONObject.toJSONString(apiNotionalSharedConfig));
 
             String id = apiNotionalSharedConfig.getId();
             String token = apiNotionalSharedConfig.getToken();
@@ -105,6 +115,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
             InputStream inReq = httpServletRequest.getInputStream();
             String requestBody = IOUtils.toString(inReq,Charset.forName("UTF-8"));
+            log.info("请求方请求体：" + requestBody);
 
             // 组织数据 待请求国家共享平台接口
             JSONObject contryReqJson = new JSONObject();
@@ -125,6 +136,8 @@ public class NationalSharedReqFilter extends ZuulFilter {
             // 配置请求参数
             contryReqJson.put("head",contryHeadReqJson);
             contryReqJson.put("param",encodeRequestBody);
+
+            log.info("国家级接口请求参数：" + contryReqJson);
 
             // 重新配置请求体
             // 将JSON设置到请求体中，并设置请求方式为POST
