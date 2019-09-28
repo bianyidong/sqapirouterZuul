@@ -70,10 +70,10 @@ public class ResponseFilter extends ZuulFilter {
             inputStream = ctx.getResponseDataStream();
             String rspBody = ctx.getResponseBody();
             //获取记录主键ID(来自routing过滤器保存的上下文)
-            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
-            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
-            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
-                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "post通用过滤器访问者IP或记录ID未获取到");
+           // Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
+           // Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
+//            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
+//                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "post通用过滤器访问者IP或记录ID未获取到");
 
 //            String ContentType=ctx.getRequest().getContentType();
 //            if ("text/xml".equals(ContentType)) {
@@ -99,11 +99,11 @@ public class ResponseFilter extends ZuulFilter {
                 ctx.setResponseBody(rspBody);
                 log.info("post通用过滤器入库完成(respBody is null)");
             } else {
-                log.info("未接收到返回的任何数据,记录ID:{}", recordID);
+                //log.info("未接收到返回的任何数据,记录ID:{}", recordID);
 
             }
-            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, recordID);
-            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
+//            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, recordID);
+//            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             return null;
         } catch (ZuulException z) {
             throw new ZtgeoBizZuulException(z, "post通用过滤器异常", z.nStatusCode, z.errorCause);
