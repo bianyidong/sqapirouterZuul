@@ -51,6 +51,7 @@ public class ShengService {
             String secret = "5a9a0db0-387a-4daa-9aac-4ed9f70a50cb@3b91c09c2c254e3981466132faf8360d";
             Map<String,String> headerMap = new HashMap<>();
 
+            headerMap.put("bmd","2.193.64.2");
             headerMap.put("Secret",secret);
             headerMap.put("Authorization",token);
             log.info("组织请求头信息：" + headerMap);
