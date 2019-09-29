@@ -20,6 +20,7 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -77,6 +78,7 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
+        log.info("-------------开始---进入国家级接口转发响应过滤器-------------");
 
         try {
             RequestContext requestContext = RequestContext.getCurrentContext();
@@ -99,8 +101,14 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
             // 解密
             String dataRespStr = responseBodyJson.getString("data");
-            String decodeRespStr = RSAUtils.decodeByPublic(dataRespStr,apiNotionalSharedConfig.getToken());
-            log.info("param解密后：" + decodeRespStr);
+            String decodeRespStr = null;
+            if(!StringUtils.isEmpty(dataRespStr)){
+                log.info("DATA字段不为空，可以进行解密");
+                decodeRespStr = RSAUtils.decodeByPublic(dataRespStr,apiNotionalSharedConfig.getToken());
+                log.info("解密后DATA字段信息：" + decodeRespStr);
+            }else{
+                log.info("DATA字段为空，无法进行解密");
+            }
 
             responseBodyJson.put("data",decodeRespStr);
 
@@ -109,9 +117,10 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
         } catch (Exception e) {
             log.info("转发国家级共享接口响应过滤器异常",e);
+            log.info("-------------结束---进入国家级接口转发响应过滤器-------------");
             throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_RESP_ERROR, "转发国家级共享接口响应过滤器异常");
         }
-
+        log.info("-------------结束---进入国家级接口转发响应过滤器-------------");
         return null;
     }
 }
