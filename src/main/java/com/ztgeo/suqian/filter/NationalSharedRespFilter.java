@@ -40,8 +40,6 @@ public class NationalSharedRespFilter extends ZuulFilter {
     private ApiBaseInfoRepository apiBaseInfoRepository;
     @Resource
     private ApiNotionalSharedConfigRepository apiNotionalSharedConfigRepository;
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     @Override
     public String filterType() {
@@ -50,7 +48,7 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 0;
+        return -99;
     }
 
     @Override
@@ -59,7 +57,6 @@ public class NationalSharedRespFilter extends ZuulFilter {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         String api_id = httpServletRequest.getHeader("api_id");
-        String fromUser = httpServletRequest.getHeader("from_user");
 
         ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.queryApiBaseInfoByApiId(api_id);
         String apiOwnerid = apiBaseInfo.getApiOwnerId();
@@ -98,39 +95,23 @@ public class NationalSharedRespFilter extends ZuulFilter {
             String responseBody = StreamUtils.copyToString(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), StandardCharsets.UTF_8);
 
             JSONObject responseBodyJson = JSONObject.parseObject(responseBody);
-
-            String dataRespStr = responseBodyJson.getString("data");
+            log.info("转发国家级接口响应报文：" + responseBodyJson);
 
             // 解密
+            String dataRespStr = responseBodyJson.getString("data");
             String decodeRespStr = RSAUtils.decodeByPublic(dataRespStr,apiNotionalSharedConfig.getToken());
+            log.info("param解密后：" + decodeRespStr);
 
             responseBodyJson.put("data",decodeRespStr);
 
-            log.info("响应报文：" + decodeRespStr);
+            log.info("转发国家级接口过滤器响应报文：" + responseBodyJson);
             requestContext.setResponseBody(responseBodyJson.toJSONString());
 
-
-
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_ERROR, "转发国家共享接口异常");
+            log.info("转发国家级共享接口响应过滤器异常",e);
+            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_RESP_ERROR, "转发国家级共享接口响应过滤器异常");
         }
-
 
         return null;
-    }
-
-    // 序号获取与配置
-    private synchronized int getXuHao(String configKey) {
-        boolean totalIsHasKey = redisTemplate.hasKey(configKey);
-        if (!totalIsHasKey) {
-            System.out.println("未发现接口总访问量配置KEY，新建");
-            redisTemplate.opsForValue().set(configKey, "1");
-            redisTemplate.expire(configKey, 2, TimeUnit.DAYS);
-            return 1;
-        }else{
-            int xuhao = Integer.valueOf(redisTemplate.opsForValue().get(configKey)) + 1;
-            redisTemplate.opsForValue().set(configKey,String.valueOf(xuhao));
-            return xuhao;
-        }
     }
 }
