@@ -45,10 +45,11 @@ public enum CodeMsg {
     YXLT_DZ_TOKEN_ERROR(509,"转发不动产请求TOKEN获取失败！"),
     FAILMAXSCOUNT(510,"接口已达最大访问量！"),
     FAILQUILK(511,"请求过于频繁！"),
-    NATIONALSHARED_ERROR(512,"转发国家级共享接口异常！"),
-    PROVICESHARED_ERROR(513,"转发省级共享接口异常！"),
-    CITY_ERROR(514,"转发市级共享接口异常！"),
-    NANKANG_ERROR(515,"转发南康接口异常！");
+    NATIONALSHARED_REQ_ERROR(512,"转发国家级共享接口请求过滤器异常！"),
+    NATIONALSHARED_RESP_ERROR(513,"转发国家级共享接口响应过滤器异常！"),
+    PROVICESHARED_ERROR(514,"转发省级共享接口异常！"),
+    CITY_ERROR(515,"转发市级共享接口异常！"),
+    NANKANG_ERROR(516,"转发南康接口异常！");
 
 
     private CodeMsg(int statusCode, String message) {

@@ -129,7 +129,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
             contryHeadReqJson.put("deptName",deptName);
             contryHeadReqJson.put("userName",userName);
             contryHeadReqJson.put("requestType",requestType);
-            contryHeadReqJson.put("cxqqbh",cxqqdh);
+            contryHeadReqJson.put("cxqqdh",cxqqdh);
             contryHeadReqJson.put("businessNumber",businessNumber);
 
             // 配置请求体
@@ -139,7 +139,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
             contryReqJson.put("head",contryHeadReqJson);
             contryReqJson.put("param",encodeRequestBody);
 
-            log.info("国家级接口请求参数：" + contryReqJson);
+            log.info("待转发国家级接口请求报文：" + contryReqJson);
 
             // 重新配置请求体
             // 将JSON设置到请求体中，并设置请求方式为POST
@@ -170,11 +170,9 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
             });
 
-
-
-
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_ERROR, "转发国家共享接口异常");
+            log.info("转发国家级共享接口请求过滤器异常",e);
+            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_REQ_ERROR, "转发国家级共享接口请求过滤器异常");
         }
 
 
