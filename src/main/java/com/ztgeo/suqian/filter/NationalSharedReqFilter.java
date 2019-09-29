@@ -86,6 +86,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
 
+        log.info("-------------开始---进入国家级接口转发请求过滤器-------------");
         try {
             RequestContext requestContext = RequestContext.getCurrentContext();
             HttpServletRequest httpServletRequest = requestContext.getRequest();
@@ -172,10 +173,10 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
         } catch (Exception e) {
             log.info("转发国家级共享接口请求过滤器异常",e);
+            log.info("-------------结束---进入国家级接口转发请求过滤器-------------");
             throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_REQ_ERROR, "转发国家级共享接口请求过滤器异常");
         }
-
-
+        log.info("-------------结束---进入国家级接口转发请求过滤器-------------");
         return null;
     }
 
