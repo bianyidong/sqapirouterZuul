@@ -112,7 +112,7 @@ public class NationalSharedRespFilter extends ZuulFilter {
 
 
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_ERROR, "转发国家共享接口异常");
+            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_ERROR, "国家共享接口返回异常");
         }
 
 

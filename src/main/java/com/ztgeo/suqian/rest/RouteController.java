@@ -48,29 +48,29 @@ public class RouteController {
     }
 
     // 每天下午17：30执行通知重发
-    @Scheduled(cron = "0 30 20 * * ?")
-    public void sendNoticeRestart(){
-        List<NoticeRecord> listLogs = noticeRecordRepository.findNoticeRecordsByStatusAndCountLessThan(1,3);
-        for (int i = 0; i < listLogs.size(); i++) {
-            try {
-                String rspData = HttpOperation.sendJsonHttp(listLogs.get(i).getReceiverUrl(), listLogs.get(i).getRequestData());
-                CommonResponseEntity commonResponseEntity = JSONObject.parseObject(rspData, CommonResponseEntity.class);
-                if (StringUtils.isBlank(rspData)) {
-                    log.info("未接收到{}响应数据",listLogs.get(i).getReceiverUrl());
-                    throw new ZtgeoBizRuntimeException(CodeMsg.FAIL, "未接收到响应数据");
-                } else {
-                    if (commonResponseEntity.getCode() == 200) {
-                        noticeRecordRepository.updateNoticeRecordStatusSuccess(listLogs.get(i).getRecordId());
-                    } else {
-                        int count = listLogs.get(i).getCount() + 1;
-                        noticeRecordRepository.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                int count = listLogs.get(i).getCount() + 1;
-                noticeRecordRepository.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
-            }
-        }
-    }
+//    @Scheduled(cron = "0 30 20 * * ?")
+//    public void sendNoticeRestart(){
+//        List<NoticeRecord> listLogs = noticeRecordRepository.findNoticeRecordsByStatusAndCountLessThan(1,3);
+//        for (int i = 0; i < listLogs.size(); i++) {
+//            try {
+//                String rspData = HttpOperation.sendJsonHttp(listLogs.get(i).getReceiverUrl(), listLogs.get(i).getRequestData());
+//                CommonResponseEntity commonResponseEntity = JSONObject.parseObject(rspData, CommonResponseEntity.class);
+//                if (StringUtils.isBlank(rspData)) {
+//                    log.info("未接收到{}响应数据",listLogs.get(i).getReceiverUrl());
+//                    throw new ZtgeoBizRuntimeException(CodeMsg.FAIL, "未接收到响应数据");
+//                } else {
+//                    if (commonResponseEntity.getCode() == 200) {
+//                        noticeRecordRepository.updateNoticeRecordStatusSuccess(listLogs.get(i).getRecordId());
+//                    } else {
+//                        int count = listLogs.get(i).getCount() + 1;
+//                        noticeRecordRepository.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                int count = listLogs.get(i).getCount() + 1;
+//                noticeRecordRepository.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
+//            }
+//        }
+//    }
 }
