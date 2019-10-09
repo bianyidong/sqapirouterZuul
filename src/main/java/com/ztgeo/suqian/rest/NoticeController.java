@@ -46,7 +46,7 @@ import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
  */
 @RestController
 public class NoticeController {
-    private static final Logger log = LoggerFactory.getLogger(RouteController.class);
+    private static final Logger log = LoggerFactory.getLogger(NoticeController.class);
     private String Symmetric_pubkey;
 
     private String SignPubKey;

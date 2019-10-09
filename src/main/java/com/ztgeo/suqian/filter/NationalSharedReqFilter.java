@@ -54,7 +54,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return -77;
+        return 0;
     }
 
     @Override

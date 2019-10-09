@@ -97,7 +97,7 @@ public class ResponseFilter extends ZuulFilter {
                 ctx.setResponseDataStream(inputStreamNew);
             } else if (!Objects.equals(null, rspBody)) {
                 ctx.setResponseBody(rspBody);
-                log.info("post通用过滤器入库完成(respBody is null)");
+                log.info("post通用过滤器入库完成{}",rspBody);
             } else {
                 //log.info("未接收到返回的任何数据,记录ID:{}", recordID);
 

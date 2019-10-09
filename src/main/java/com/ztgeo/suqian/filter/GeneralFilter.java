@@ -83,6 +83,7 @@ GeneralFilter extends ZuulFilter {
             inputStream = ctx.getRequest().getInputStream();
             String body = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
             ctx.set(GlobalConstants.SENDBODY, body);
+            log.info("通用body体:{}",body);
             return null;
         } catch (Exception s) {
             throw new ZtgeoBizZuulException(s, CodeMsg.FAIL, "通用转发过滤器内部异常");
