@@ -67,17 +67,17 @@ public class NationalSharedReqFilter extends ZuulFilter {
         ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.queryApiBaseInfoByApiId(api_id);
         String apiOwnerid = apiBaseInfo.getApiOwnerId();
 
-        int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);
         int configCount = apiNotionalSharedConfigRepository.countApiNotionalSharedConfigsByUseridEquals(apiOwnerid);
 
-        log.info("国家级过滤器：userCount:" + useCount + "，configCount：" + configCount );
+        log.info("国家级过滤器：userCount:" + useCount + "，configCount：" + configCount);
 
-        if(useCount == 0){
+        if (useCount == 0) {
             return false;
-        }else {
-            if(configCount == 0){
+        } else {
+            if (configCount == 0) {
                 return false;
-            }else {
+            } else {
                 return true;
             }
         }
@@ -113,11 +113,11 @@ public class NationalSharedReqFilter extends ZuulFilter {
             String currentDays = new SimpleDateFormat("yyyyMMdd").format(new Date());
             String configKey = currentDays + ":" + qxdm;
             int xuHao = getXuHao(configKey);
-            String cxqqdh = currentDays + qxdm + String.format("%06d",xuHao);
+            String cxqqdh = currentDays + qxdm + String.format("%06d", xuHao);
 
 
             InputStream inReq = httpServletRequest.getInputStream();
-            String requestBody = IOUtils.toString(inReq,Charset.forName("UTF-8"));
+            String requestBody = IOUtils.toString(inReq, Charset.forName("UTF-8"));
             log.info("请求方请求体：" + requestBody);
 
             // 组织数据 待请求国家共享平台接口
@@ -125,20 +125,20 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
             // 配置请求头信息
             JSONObject contryHeadReqJson = new JSONObject();
-            contryHeadReqJson.put("id",id);
-            contryHeadReqJson.put("token",token);
-            contryHeadReqJson.put("deptName",deptName);
-            contryHeadReqJson.put("userName",userName);
-            contryHeadReqJson.put("requestType",requestType);
-            contryHeadReqJson.put("cxqqdh",cxqqdh);
-            contryHeadReqJson.put("businessNumber",businessNumber);
+            contryHeadReqJson.put("id", id);
+            contryHeadReqJson.put("token", token);
+            contryHeadReqJson.put("deptName", deptName);
+            contryHeadReqJson.put("userName", userName);
+            contryHeadReqJson.put("requestType", requestType);
+            contryHeadReqJson.put("cxqqdh", cxqqdh);
+            contryHeadReqJson.put("businessNumber", businessNumber);
 
             // 配置请求体
-            String encodeRequestBody = RSAUtils.encodeByPublic(requestBody,token);
+            String encodeRequestBody = RSAUtils.encodeByPublic(requestBody, token);
 
             // 配置请求参数
-            contryReqJson.put("head",contryHeadReqJson);
-            contryReqJson.put("param",encodeRequestBody);
+            contryReqJson.put("head", contryHeadReqJson);
+            contryReqJson.put("param", encodeRequestBody);
 
             log.info("待转发国家级接口请求报文：" + contryReqJson);
 
@@ -160,6 +160,11 @@ public class NationalSharedReqFilter extends ZuulFilter {
                 }
 
                 @Override
+                public String getContentType() {
+                    return "application/json";
+                }
+
+                @Override
                 public int getContentLength() {
                     return reqBodyBytes.length;
                 }
@@ -172,7 +177,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
             });
 
         } catch (Exception e) {
-            log.info("转发国家级共享接口请求过滤器异常",e);
+            log.info("转发国家级共享接口请求过滤器异常", e);
             log.info("-------------结束---进入国家级接口转发请求过滤器-------------");
             throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_REQ_ERROR, "转发国家级共享接口请求过滤器异常");
         }
@@ -187,9 +192,9 @@ public class NationalSharedReqFilter extends ZuulFilter {
             redisTemplate.opsForValue().set(configKey, "1");
             redisTemplate.expire(configKey, 2, TimeUnit.DAYS);
             return 1;
-        }else{
+        } else {
             int xuhao = Integer.valueOf(redisTemplate.opsForValue().get(configKey)) + 1;
-            redisTemplate.opsForValue().set(configKey,String.valueOf(xuhao));
+            redisTemplate.opsForValue().set(configKey, String.valueOf(xuhao));
             return xuhao;
         }
     }
