@@ -161,7 +161,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
                 @Override
                 public String getContentType() {
-                    return "application/json";
+                    return "application/json;charset=utf-8";
                 }
 
                 @Override
