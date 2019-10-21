@@ -146,7 +146,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
             // 将JSON设置到请求体中，并设置请求方式为POST
             String newbody = contryReqJson.toJSONString();
             // BODY体设置
-            final byte[] reqBodyBytes = newbody.getBytes();
+            final byte[] reqBodyBytes = newbody.getBytes("UTF-8");
             requestContext.setRequest(new HttpServletRequestWrapper(httpServletRequest) {
 
                 @Override
@@ -176,7 +176,9 @@ public class NationalSharedReqFilter extends ZuulFilter {
 
             });
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+
             log.info("转发国家级共享接口请求过滤器异常", e);
             log.info("-------------结束---进入国家级接口转发请求过滤器-------------");
             throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_REQ_ERROR, "转发国家级共享接口请求过滤器异常");

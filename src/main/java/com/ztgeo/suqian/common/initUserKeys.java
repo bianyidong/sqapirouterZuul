@@ -7,18 +7,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
 
-//@Component
+@Component
 @Order(1)
 public class initUserKeys implements CommandLineRunner {
     private Logger log = LoggerFactory.getLogger(initUserKeys.class);
@@ -29,7 +33,6 @@ public class initUserKeys implements CommandLineRunner {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     /**
      * 初始化密钥信息
      *
@@ -50,8 +53,8 @@ public class initUserKeys implements CommandLineRunner {
             setjsonObject.put("Sign_pt_secret_key", listUserKeys.get(i).getSignPtSecretKey());
             setjsonObject.put("Sign_pt_pub_key", listUserKeys.get(i).getSignPtPubKey());
             //存入Redis
-            redis.set(USER_REDIS_SESSION +":"+listUserKeys.get(i).getUserRealId(), setjsonObject.toJSONString());
-
+            redis.set("aaaaaa:bbbb:"+USER_REDIS_SESSION +":"+listUserKeys.get(i).getUserRealId(), setjsonObject.toJSONString());
         }
+
     }
 }
