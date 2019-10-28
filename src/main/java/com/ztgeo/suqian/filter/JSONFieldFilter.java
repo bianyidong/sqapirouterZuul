@@ -10,18 +10,15 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
 import com.ztgeo.suqian.entity.ag_datashare.ApiJsonKeyFilter;
-import com.ztgeo.suqian.entity.ag_datashare.ApiJsonKeyFilterRepository;
-import com.ztgeo.suqian.entity.ag_datashare.ApiUserFilter;
+import com.ztgeo.suqian.repository.agShare.ApiJsonKeyFilterRepository;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import io.micrometer.core.instrument.util.IOUtils;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 

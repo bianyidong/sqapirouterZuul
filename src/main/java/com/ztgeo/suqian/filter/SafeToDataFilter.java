@@ -8,20 +8,16 @@ import com.netflix.zuul.exception.ZuulException;
 
 import com.ztgeo.suqian.common.CryptographyOperation;
 import com.ztgeo.suqian.common.GlobalConstants;
-import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.config.RedisOperator;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
-import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiBaseInfoRepository;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -29,10 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Objects;
 
-import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
 import static com.ztgeo.suqian.filter.AddSendBodyFilter.getObject;
 /**
  * 用于请求时重新加密
@@ -43,8 +36,10 @@ public class SafeToDataFilter extends ZuulFilter {
     private static Logger log = LoggerFactory.getLogger(SafeToDataFilter.class);
     private String api_id;
     private  String Symmetric_pubkeyapiUserIDJson;
+//    @Resource
+//    private ApiUserFilterRepository apiUserFilterRepository;
     @Resource
-    private ApiUserFilterRepository apiUserFilterRepository;
+    private AGShareDao agShareDao;
     @Resource
     private ApiBaseInfoRepository apiBaseInfoRepository;
 //    @Resource
@@ -121,7 +116,7 @@ public class SafeToDataFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         api_id=request.getHeader("api_id");
-        int count = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
         if (count>0){
             return true;
         }else {

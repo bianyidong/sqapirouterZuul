@@ -2,7 +2,7 @@ package com.ztgeo.suqian.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
-import com.ztgeo.suqian.repository.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

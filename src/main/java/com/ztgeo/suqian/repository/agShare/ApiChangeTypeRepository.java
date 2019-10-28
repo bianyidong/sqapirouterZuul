@@ -1,9 +1,9 @@
-package com.ztgeo.suqian.repository;
+package com.ztgeo.suqian.repository.agShare;
 
-import com.ztgeo.suqian.entity.ag_datashare.ApiColMapping;
+import com.ztgeo.suqian.entity.ag_datashare.ApiChangeType;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ApiColMappingRepository extends CrudRepository<ApiColMapping, String> {
+public interface ApiChangeTypeRepository extends CrudRepository<ApiChangeType, String> {
 
     /**
      *  按受理编号查询不动产办理进度接口
@@ -16,4 +16,6 @@ public interface ApiColMappingRepository extends CrudRepository<ApiColMapping, S
 //                    "   AND TSGL.TSTYBM = ?",nativeQuery = true)
 //    @Transactional
 //    DJ_DY findDJ_DYInfoByslbh(String slbh);
+
+    ApiChangeType findApiChangeTypesByApiIdEquals(String api_id);
 }

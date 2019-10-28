@@ -4,12 +4,12 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import com.ztgeo.suqian.repository.agShare.UserKeyInfoRepository;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 public class FromUserFilter extends ZuulFilter {
 
     @Resource
-    private ApiUserFilterRepository apiUserFilterRepository;
+    private AGShareDao agShareDao;
     @Resource
     private UserKeyInfoRepository userKeyInfoRepository;
 
@@ -51,7 +51,7 @@ public class FromUserFilter extends ZuulFilter {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         api_id = httpServletRequest.getHeader("api_id");
-        int count = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
         if(count == 0){
             return false;
         }else{

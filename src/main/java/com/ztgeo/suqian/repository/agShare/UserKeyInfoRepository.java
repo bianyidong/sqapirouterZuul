@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.repository;
+package com.ztgeo.suqian.repository.agShare;
 
 import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
 import org.springframework.data.jpa.repository.Query;

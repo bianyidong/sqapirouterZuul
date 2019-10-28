@@ -6,7 +6,7 @@ import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
 import com.ztgeo.suqian.entity.ag_datashare.DzYixing;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.DzYixingRepository;
+import com.ztgeo.suqian.repository.agShare.DzYixingRepository;
 import com.ztgeo.suqian.utils.StreamOperateUtils;
 import com.ztgeo.suqian.utils.XmlAndJsonUtils;
 import org.slf4j.Logger;

@@ -8,13 +8,9 @@ import com.ztgeo.suqian.common.CryptographyOperation;
 import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.config.RedisOperator;
 import com.ztgeo.suqian.entity.ag_datashare.ApiJgtoPtFilter;
-import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiJgtoPtFilterRepository;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiJgtoPtFilterRepository;
 import org.apache.commons.lang3.StringUtils;
 
 import org.slf4j.Logger;
@@ -22,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -33,7 +28,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import java.util.Objects;
-import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
 
 
 /**

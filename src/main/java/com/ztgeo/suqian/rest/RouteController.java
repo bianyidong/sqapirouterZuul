@@ -1,14 +1,7 @@
 package com.ztgeo.suqian.rest;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
-import com.ztgeo.suqian.entity.ag_datashare.NoticeRecord;
-import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.msg.ResultMap;
-import com.ztgeo.suqian.repository.NoticeRecordRepository;
-import com.ztgeo.suqian.utils.CommonResponseEntity;
-import com.ztgeo.suqian.utils.HttpOperation;
-import com.ztgeo.suqian.utils.StringUtils;
+import com.ztgeo.suqian.repository.agShare.NoticeRecordRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +9,10 @@ import org.springframework.cloud.netflix.zuul.RoutesRefreshedEvent;
 import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 
 /**

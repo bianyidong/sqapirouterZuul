@@ -2,11 +2,21 @@ spring:
   application:
     name: apiRouterZuulGate
   datasource:
+    master:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.mysql.jdbc.Driver
       url: jdbc:mysql://127.0.0.1:3306/ag_datashare?useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: root
       password: 123456
+    cluster:
+      - key: slave1 # slave1 默认使用不动产公共库
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ag_sharelog?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password: 123456
+
+#解决http请求乱码的问题
   http:
     encoding:
       charset: UTF-8

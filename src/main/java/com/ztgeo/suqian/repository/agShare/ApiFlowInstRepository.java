@@ -1,5 +1,6 @@
-package com.ztgeo.suqian.entity.ag_datashare;
+package com.ztgeo.suqian.repository.agShare;
 
+import com.ztgeo.suqian.entity.ag_datashare.ApiFlowInst;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

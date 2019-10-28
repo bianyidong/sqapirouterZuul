@@ -1,18 +1,15 @@
 package com.ztgeo.suqian.filter;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.isoftstone.sign.SignGeneration;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiCitySharedConfig;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiCitySharedConfigRepository;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import io.micrometer.core.instrument.util.IOUtils;
+import com.ztgeo.suqian.repository.agShare.ApiCitySharedConfigRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +18,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,7 +31,7 @@ public class CitySharedReqFilter extends ZuulFilter {
     private static Logger log = LoggerFactory.getLogger(CitySharedReqFilter.class);
 
     @Resource
-    private ApiUserFilterRepository apiUserFilterRepository;
+    private AGShareDao agShareDao;
     @Resource
     private ApiCitySharedConfigRepository apiCitySharedConfigRepository;
     @Autowired
@@ -62,7 +54,7 @@ public class CitySharedReqFilter extends ZuulFilter {
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         String api_id = httpServletRequest.getHeader("api_id");
 
-        int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        int useCount = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
         int configCount = apiCitySharedConfigRepository.countApiCitySharedConfigsByApiIdEquals(api_id);
         if(useCount == 0){
             return false;

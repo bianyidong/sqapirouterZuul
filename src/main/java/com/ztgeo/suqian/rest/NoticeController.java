@@ -15,9 +15,9 @@ import com.ztgeo.suqian.entity.ag_datashare.NoticeRecord;
 import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.msg.ResultMap;
-import com.ztgeo.suqian.repository.NoticeBaseInfoRepository;
-import com.ztgeo.suqian.repository.NoticeRecordRepository;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
+import com.ztgeo.suqian.repository.agShare.NoticeBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.NoticeRecordRepository;
+import com.ztgeo.suqian.repository.agShare.UserKeyInfoRepository;
 
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;

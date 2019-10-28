@@ -2,23 +2,18 @@ package com.ztgeo.suqian.common;
 import com.alibaba.fastjson.JSONObject;
 import com.ztgeo.suqian.config.RedisOperator;
 import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
+import com.ztgeo.suqian.repository.agShare.UserKeyInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
 

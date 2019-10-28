@@ -2,30 +2,20 @@ package com.ztgeo.suqian.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.ztgeo.suqian.common.CryptographyOperation;
 import com.ztgeo.suqian.common.GlobalConstants;
-import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.config.RedisOperator;
-import com.ztgeo.suqian.entity.HttpEntity;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
-import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiBaseInfoRepository;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
@@ -35,10 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Objects;
 
-import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
 import static com.ztgeo.suqian.filter.AddSendBodyFilter.getObject;
 
 

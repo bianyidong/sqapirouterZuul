@@ -7,13 +7,11 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
-import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalSharedConfig;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiBaseInfoRepository;
-import com.ztgeo.suqian.repository.ApiNotionalSharedConfigRepository;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import com.ztgeo.suqian.utils.RSAUtils;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +28,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,7 +42,7 @@ public class SuqianNanKangReqFilter extends ZuulFilter {
     private String NanKangKey;
 
     @Resource
-    private ApiUserFilterRepository apiUserFilterRepository;
+    private AGShareDao agShareDao;
     @Resource
     private ApiNotionalSharedConfigRepository apiNotionalSharedConfigRepository;
     @Resource
@@ -71,7 +67,7 @@ public class SuqianNanKangReqFilter extends ZuulFilter {
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         String api_id = httpServletRequest.getHeader("api_id");
 
-        int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);
+        int useCount = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);
 
         if (useCount == 0) {
             return false;

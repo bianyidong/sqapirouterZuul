@@ -6,7 +6,7 @@
     <groupId>com.ztgeo.suqian</groupId>
     <artifactId>apiRouterZuulGate</artifactId>
     <version>2.1</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>apiRouterZuulGate</name>
     <description>宿迁通用接口转发路由网关程序</description>
@@ -88,10 +88,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
@@ -160,6 +156,16 @@
             <artifactId>jsoup</artifactId>
             <version>1.11.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--            <version>1.5.1.RELEASE</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <dependencyManagement>

@@ -1,23 +1,25 @@
 package com.ztgeo.suqian.filter;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.entity.HttpEntity;
+import com.ztgeo.suqian.dao.AGLogDao;
+import com.ztgeo.suqian.entity.ag_datashare.ApiUserFilter;
+import com.ztgeo.suqian.entity.ag_datashare.BaseUser;
+import com.ztgeo.suqian.entity.ag_log.ApiAccessRecord;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agLog.ApiAccessRecordRepository;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import com.ztgeo.suqian.repository.agShare.BaseUserRepository;
 import com.ztgeo.suqian.utils.HttpUtils;
+import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,10 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
-import java.time.Instant;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -47,10 +51,15 @@ public class AddSendBodyFilter extends ZuulFilter {
     private static Logger log = LoggerFactory.getLogger(AddSendBodyFilter.class);
     @Resource
     private ApiBaseInfoRepository apiBaseInfoRepository;
-    @Autowired
-    private MongoClient mongoClient;
+    @Resource
+    private ApiUserFilterRepository apiUserFilterRepository;
+    @Resource
+    private BaseUserRepository baseUserRepository;
+    @Resource
+    private AGLogDao agLogDao;
     @Value("${customAttributes.httpName}")
     private String httpName; // 存储用户发送数据的数据库名
+    private String UserFilter="";
 
     @Override
     public Object run() throws ZuulException {
@@ -59,9 +68,12 @@ public class AddSendBodyFilter extends ZuulFilter {
             // 获取request
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
-            String url = request.getRequestURI();
-            String type=request.getContentType();
-            String sendbody = ctx.get(GlobalConstants.SENDBODY).toString();
+            //String uri = request.getRequestURI();
+           String url= request.getRequestURL().toString();
+            String type = request.getContentType();
+            //String sendbody = ctx.get(GlobalConstants.SENDBODY).toString();
+            InputStream inReq = request.getInputStream();
+            String requestBody = IOUtils.toString(inReq, Charset.forName("UTF-8"));
             log.info("访问者IP:{}", HttpUtils.getIpAdrress(request));
             //1.获取heard中的userID和ApiID
             String apiID;
@@ -81,38 +93,42 @@ public class AddSendBodyFilter extends ZuulFilter {
                 apiID = reqapiID;
                 userID = requserID;
             }
+            List<ApiUserFilter> listApiuserFilter = apiUserFilterRepository.findApiUserFiltersByApiId(apiID);
+            if (listApiuserFilter.size() == 0) {
+                log.info("该接口没有配置需要配置的过滤器");
+            } else {
+                for (ApiUserFilter apiUserFilter : listApiuserFilter) {
+                    UserFilter = UserFilter + apiUserFilter.getFilterName() + ",";
+                }
+            }
+            BaseUser baseUser=baseUserRepository.findByIdEquals(userID);
+            String userName=baseUser.getName();
             List<ApiBaseInfo> list = apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
             ApiBaseInfo apiBaseInfo = list.get(0);
-            //3.相关信息存入到mongodb中,有待完善日志
-            CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
-                    CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-            MongoDatabase mongoDB = mongoClient.getDatabase(httpName).withCodecRegistry(pojoCodecRegistry);
-            MongoCollection<HttpEntity> collection = mongoDB.getCollection(userID + "_record", HttpEntity.class);
-            //封装参数
-            HttpEntity httpEntity = new HttpEntity();
             String id = com.ztgeo.suqian.utils.StringUtils.getShortUUID();
-            httpEntity.setID(id);
-            httpEntity.setSendUserID(userID);
-            httpEntity.setApiID(apiID);
-            httpEntity.setApiName(apiBaseInfo.getApiName());
-            httpEntity.setApiPath(apiBaseInfo.getPath());
-            httpEntity.setReceiveUserID(apiBaseInfo.getApiOwnerId());
-            httpEntity.setReceiverUserName(apiBaseInfo.getApiOwnerName());
-            httpEntity.setContentType(request.getContentType());
-            httpEntity.setMethod(request.getMethod());
             String accessClientIp = HttpUtils.getIpAdrress(request);
-            httpEntity.setSourceUrl(accessClientIp);
-            httpEntity.setSendBody(sendbody);
             LocalDateTime localTime = LocalDateTime.now();
-            httpEntity.setYear(localTime.getYear());
-            httpEntity.setMonth(localTime.getMonthValue());
-            httpEntity.setDay(localTime.getDayOfMonth());
-            httpEntity.setHour(localTime.getHour());
-            httpEntity.setMinute(localTime.getMinute());
-            httpEntity.setSecond(localTime.getSecond());
-            httpEntity.setCurrentTime(Instant.now().getEpochSecond());
-            // 封装body
-            collection.insertOne(httpEntity);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String currentTime = dateTimeFormatter.format(localTime);
+            ApiAccessRecord apiAccessRecord = new ApiAccessRecord();
+            apiAccessRecord.setId(id);
+            apiAccessRecord.setApiId(apiID);
+            apiAccessRecord.setFromUser(userName);
+            apiAccessRecord.setApiName(apiBaseInfo.getApiName());
+            apiAccessRecord.setApiUrl(apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath());
+            apiAccessRecord.setFilterUser(UserFilter);
+            apiAccessRecord.setType(type);
+            apiAccessRecord.setAccessClientIp(url);
+            apiAccessRecord.setAccessYear(localTime.getYear());
+            apiAccessRecord.setAccessMonth(localTime.getMonthValue());
+            apiAccessRecord.setAccessDay(localTime.getDayOfMonth());
+            apiAccessRecord.setAccessTime(currentTime);
+            apiAccessRecord.setRequestData(requestBody);
+            apiAccessRecord.setResponseData("");
+            apiAccessRecord.setApiOwnerId(apiBaseInfo.getApiOwnerId());
+            apiAccessRecord.setStatus("");
+            agLogDao.saveApiAccessRecord(apiAccessRecord);
+            //apiAccessRecordRepository.save(new ApiAccessRecord(id,apiID,apiBaseInfo.getApiName(),apiBaseInfo.getBaseUrl()+apiBaseInfo.getPath(),accessClientIp,localTime.getYear(),localTime.getMonthValue(),localTime.getDayOfMonth(),currentTime,requestBody,"",userID,""));
             ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, id);
             ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             // return getObject(ctx,request,sendbody);
@@ -147,7 +163,7 @@ public class AddSendBodyFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return false;
+        return true;
     }
 
     @Override

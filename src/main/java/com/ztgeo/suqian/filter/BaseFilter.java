@@ -4,11 +4,11 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiBaseInfoRepository;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
-import com.ztgeo.suqian.repository.UserKeyInfoRepository;
-import org.apache.commons.lang.StringUtils;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import com.ztgeo.suqian.repository.agShare.UserKeyInfoRepository;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +32,10 @@ public class BaseFilter extends ZuulFilter {
     private String api_id;
     private boolean isConfig = false;
 
+//    @Resource
+//    private ApiBaseInfoRepository apiBaseInfoRepository;
     @Resource
-    private ApiBaseInfoRepository apiBaseInfoRepository;
+    private AGShareDao agShareDao;
 
     @Override
     public String filterType() {
@@ -51,7 +53,7 @@ public class BaseFilter extends ZuulFilter {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         api_id = httpServletRequest.getHeader("api_id");
-        int count = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
 
         if(count == 0){
             return false;
@@ -68,7 +70,7 @@ public class BaseFilter extends ZuulFilter {
         String api_id = httpServletRequest.getHeader("api_id");
         // 从数据库中判断是否存在api_id
         if(api_id != null){
-            int count = apiBaseInfoRepository.countApiBaseInfosByApiIdEquals(api_id);
+            int count = agShareDao.countApiBaseInfosByApiIdEquals(api_id);
             if(count == 0){
                 throw new ZtgeoBizZuulException(CodeMsg.API_FILTER_ERROR);
             }

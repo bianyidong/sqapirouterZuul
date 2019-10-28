@@ -4,12 +4,12 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.entity.ag_datashare.ApiFlowConfig;
-import com.ztgeo.suqian.entity.ag_datashare.ApiFlowConfigRepository;
-import com.ztgeo.suqian.entity.ag_datashare.ApiFlowInst;
-import com.ztgeo.suqian.entity.ag_datashare.ApiFlowInstRepository;
+import com.ztgeo.suqian.dao.AGShareDao;
+import com.ztgeo.suqian.entity.ag_datashare.*;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.ApiUserFilterRepository;
+import com.ztgeo.suqian.repository.agShare.ApiFlowConfigRepository;
+import com.ztgeo.suqian.repository.agShare.ApiFlowInstRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.StreamOperateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +34,10 @@ public class FlowFilter extends ZuulFilter {
     private ApiFlowConfigRepository apiFlowConfigRepository;
     @Resource
     private ApiFlowInstRepository apiFlowInstRepository;
+//    @Resource
+//    private ApiUserFilterRepository apiUserFilterRepository;
     @Resource
-    private ApiUserFilterRepository apiUserFilterRepository;
+    private AGShareDao agShareDao;
     private String api_id;
     @Override
     public String filterType() {
@@ -53,7 +55,7 @@ public class FlowFilter extends ZuulFilter {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         api_id = httpServletRequest.getHeader("api_id");
-        int count = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
 
         if(count == 0){
             return false;

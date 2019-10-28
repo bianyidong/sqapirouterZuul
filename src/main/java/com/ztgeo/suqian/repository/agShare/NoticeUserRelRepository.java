@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.repository;
+package com.ztgeo.suqian.repository.agShare;
 
 import com.ztgeo.suqian.entity.ag_datashare.NoticeUserReal;
 import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
