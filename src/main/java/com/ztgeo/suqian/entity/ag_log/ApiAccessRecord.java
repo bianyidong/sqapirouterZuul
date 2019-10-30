@@ -27,6 +27,8 @@ public class ApiAccessRecord implements Serializable {
 
 	@Column(name = "from_user")
 	private String fromUser;
+	@Column(name = "user_name")
+	private String userName;
 	    //
     @Column(name = "api_name")
     private String apiName;
@@ -43,19 +45,23 @@ public class ApiAccessRecord implements Serializable {
     // 访问者IP
 	@Column(name = "access_client_ip")
     private String accessClientIp;
-
+	// 访问者IP
+	@Column(name = "uri")
+	private String uri;
+	@Column(name = "year_month_day")
+	private String yearMonthDay;
 	    //访问时间
-    @Column(name = "access_year")
-    private int accessYear;
-	
-	    //
-    @Column(name = "access_month")
-    private int accessMonth;
-	
-	    //
-    @Column(name = "access_day")
-    private int accessDay;
-	
+//    @Column(name = "access_year")
+//    private int accessYear;
+//
+//	    //
+//    @Column(name = "access_month")
+//    private int accessMonth;
+//
+//	    //
+//    @Column(name = "access_day")
+//    private int accessDay;
+//
 	    //访问时间
     @Column(name = "access_time")
     private String accessTime;

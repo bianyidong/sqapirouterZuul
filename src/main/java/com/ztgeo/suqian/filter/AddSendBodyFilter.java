@@ -59,7 +59,7 @@ public class AddSendBodyFilter extends ZuulFilter {
     private AGLogDao agLogDao;
     @Value("${customAttributes.httpName}")
     private String httpName; // 存储用户发送数据的数据库名
-    private String UserFilter="";
+    private String UserFilter = "";
 
     @Override
     public Object run() throws ZuulException {
@@ -68,9 +68,11 @@ public class AddSendBodyFilter extends ZuulFilter {
             // 获取request
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
-            //String uri = request.getRequestURI();
-           String url= request.getRequestURL().toString();
+            String uri = request.getRequestURI();
+            String url = request.getRequestURL().toString();
             String type = request.getContentType();
+            String s = request.getSession().toString();
+            String aa = request.getRequestedSessionId();
             //String sendbody = ctx.get(GlobalConstants.SENDBODY).toString();
             InputStream inReq = request.getInputStream();
             String requestBody = IOUtils.toString(inReq, Charset.forName("UTF-8"));
@@ -101,37 +103,37 @@ public class AddSendBodyFilter extends ZuulFilter {
                     UserFilter = UserFilter + apiUserFilter.getFilterName() + ",";
                 }
             }
-            BaseUser baseUser=baseUserRepository.findByIdEquals(userID);
-            String userName=baseUser.getName();
+            BaseUser baseUser = baseUserRepository.findByIdEquals(userID);
+            String userName = baseUser.getName();
             List<ApiBaseInfo> list = apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
             ApiBaseInfo apiBaseInfo = list.get(0);
             String id = com.ztgeo.suqian.utils.StringUtils.getShortUUID();
             String accessClientIp = HttpUtils.getIpAdrress(request);
             LocalDateTime localTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dateTimeFormatterYmd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String currentTime = dateTimeFormatter.format(localTime);
+            String currentymd = dateTimeFormatterYmd.format(localTime);
             ApiAccessRecord apiAccessRecord = new ApiAccessRecord();
             apiAccessRecord.setId(id);
             apiAccessRecord.setApiId(apiID);
-            apiAccessRecord.setFromUser(userName);
+            apiAccessRecord.setFromUser(userID);
+            apiAccessRecord.setUserName(userName);
             apiAccessRecord.setApiName(apiBaseInfo.getApiName());
             apiAccessRecord.setApiUrl(apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath());
             apiAccessRecord.setFilterUser(UserFilter);
             apiAccessRecord.setType(type);
             apiAccessRecord.setAccessClientIp(url);
-            apiAccessRecord.setAccessYear(localTime.getYear());
-            apiAccessRecord.setAccessMonth(localTime.getMonthValue());
-            apiAccessRecord.setAccessDay(localTime.getDayOfMonth());
+            apiAccessRecord.setUri(uri);
+            apiAccessRecord.setYearMonthDay(currentymd);
             apiAccessRecord.setAccessTime(currentTime);
             apiAccessRecord.setRequestData(requestBody);
             apiAccessRecord.setResponseData("");
             apiAccessRecord.setApiOwnerId(apiBaseInfo.getApiOwnerId());
-            apiAccessRecord.setStatus("");
+            apiAccessRecord.setStatus("1");
             agLogDao.saveApiAccessRecord(apiAccessRecord);
-            //apiAccessRecordRepository.save(new ApiAccessRecord(id,apiID,apiBaseInfo.getApiName(),apiBaseInfo.getBaseUrl()+apiBaseInfo.getPath(),accessClientIp,localTime.getYear(),localTime.getMonthValue(),localTime.getDayOfMonth(),currentTime,requestBody,"",userID,""));
             ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, id);
             ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
-            // return getObject(ctx,request,sendbody);
             return null;
         } catch (Exception e) {
             e.printStackTrace();
