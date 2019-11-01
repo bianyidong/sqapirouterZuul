@@ -2,9 +2,7 @@ package com.ztgeo.suqian.utils;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
-import com.ztgeo.suqian.filter.AddSendBodyFilter;
 import com.ztgeo.suqian.msg.CodeMsg;
 import okhttp3.*;
 import org.slf4j.Logger;

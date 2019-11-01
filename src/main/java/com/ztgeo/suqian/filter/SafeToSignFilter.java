@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static com.ztgeo.suqian.filter.AddSendBodyFilter.getObject;
+import static com.ztgeo.suqian.filter.AddRequestBodyFilter.getObject;
 
 
 /**

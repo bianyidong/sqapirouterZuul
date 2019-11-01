@@ -13,19 +13,17 @@ import com.ztgeo.suqian.entity.ag_datashare.BaseUser;
 import com.ztgeo.suqian.entity.ag_log.ApiAccessRecord;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
-import com.ztgeo.suqian.repository.agLog.ApiAccessRecordRepository;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.repository.agShare.BaseUserRepository;
 import com.ztgeo.suqian.utils.HttpUtils;
-import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletInputStream;
@@ -46,9 +44,9 @@ import java.util.List;
  * @version 2019-7-12
  */
 @Component
-public class AddSendBodyFilter extends ZuulFilter {
+public class AddRequestBodyFilter extends ZuulFilter {
 
-    private static Logger log = LoggerFactory.getLogger(AddSendBodyFilter.class);
+    private static Logger log = LoggerFactory.getLogger(AddRequestBodyFilter.class);
     @Resource
     private ApiBaseInfoRepository apiBaseInfoRepository;
     @Resource
@@ -74,8 +72,9 @@ public class AddSendBodyFilter extends ZuulFilter {
             String s = request.getSession().toString();
             String aa = request.getRequestedSessionId();
             //String sendbody = ctx.get(GlobalConstants.SENDBODY).toString();
-            InputStream inReq = request.getInputStream();
-            String requestBody = IOUtils.toString(inReq, Charset.forName("UTF-8"));
+            //2.获取body中的加密和加签数据并验签
+            InputStream in = request.getInputStream();
+            String requestBody = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
             log.info("访问者IP:{}", HttpUtils.getIpAdrress(request));
             //1.获取heard中的userID和ApiID
             String apiID;
@@ -134,7 +133,8 @@ public class AddSendBodyFilter extends ZuulFilter {
             agLogDao.saveApiAccessRecord(apiAccessRecord);
             ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, id);
             ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
-            return null;
+            return getObject(ctx, request, requestBody);
+            //return null;
         } catch (Exception e) {
             e.printStackTrace();
             log.info("请求方日志过滤器异常");
@@ -170,12 +170,12 @@ public class AddSendBodyFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 5;
+        return -98;
     }
 
     @Override
     public String filterType() {
-        return FilterConstants.ROUTE_TYPE;
+        return FilterConstants.PRE_TYPE;
     }
 
 

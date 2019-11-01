@@ -13,7 +13,6 @@ import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
-import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static com.ztgeo.suqian.filter.AddSendBodyFilter.getObject;
+import static com.ztgeo.suqian.filter.AddRequestBodyFilter.getObject;
 /**
  * 用于请求时重新加密
  */

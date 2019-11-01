@@ -118,7 +118,6 @@ public class ResponseSafeToSignFilter extends ZuulFilter {
                 JSONObject jsonObject = JSON.parseObject(rspBody);
                 String data=jsonObject.get("data").toString();
                 String sign=jsonObject.get("sign").toString();
-
                 // 验证签名
                 boolean rspVerifyResult = CryptographyOperation.signatureVerify(Sign_pub_keyapiUserIDJson, data, sign);
                 if (Objects.equals(rspVerifyResult, false))

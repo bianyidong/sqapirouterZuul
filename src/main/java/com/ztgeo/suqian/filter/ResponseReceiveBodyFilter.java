@@ -44,7 +44,7 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 40;
+        return 98;
     }
 
     @Override
