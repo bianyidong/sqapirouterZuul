@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Post_type;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nankang.tool.EncrypterAESTool;
@@ -10,7 +10,6 @@ import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
-import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.StreamOperateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

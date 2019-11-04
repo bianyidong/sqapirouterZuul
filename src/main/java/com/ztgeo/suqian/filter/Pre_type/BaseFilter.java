@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Pre_type;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -32,8 +32,7 @@ public class BaseFilter extends ZuulFilter {
     private String api_id;
     private boolean isConfig = false;
 
-//    @Resource
-//    private ApiBaseInfoRepository apiBaseInfoRepository;
+
     @Resource
     private AGShareDao agShareDao;
 

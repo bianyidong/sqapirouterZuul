@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Pre_type;
 
 import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;

@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Pre_type;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static com.ztgeo.suqian.filter.AddRequestBodyFilter.getObject;
+import static com.ztgeo.suqian.filter.Pre_type.AddRequestBodyFilter.getObject;
 
 
 /**

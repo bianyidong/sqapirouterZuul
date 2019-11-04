@@ -1,22 +1,18 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Pre_type;
 
 import com.alibaba.fastjson.JSONObject;
-import com.nankang.tool.EncrypterAESTool;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
-import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import com.ztgeo.suqian.utils.HttpOperation;
 import io.micrometer.core.instrument.util.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -31,18 +27,13 @@ import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 /**
- *  房地产平台接口---南康
+ *  国土资源部接口---政务外网（省厅大数据中心转发的接口，需要TOKEN验证dddddd
  */
 @Component
-public class SuqianNanKangReqFilter extends ZuulFilter {
-
-    private static Logger log = LoggerFactory.getLogger(SuqianNanKangReqFilter.class);
-
-    @Value(value = "${sqnankangkey}")
-    private String NanKangKey;
+public class ProvinceSharedReqFilter extends ZuulFilter {
 
     @Resource
-    private AGShareDao agShareDao;
+    private ApiUserFilterRepository apiUserFilterRepository;
     @Resource
     private ApiNotionalSharedConfigRepository apiNotionalSharedConfigRepository;
     @Resource
@@ -66,16 +57,13 @@ public class SuqianNanKangReqFilter extends ZuulFilter {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         String api_id = httpServletRequest.getHeader("api_id");
-
-        int useCount = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);
-
-        if (useCount == 0) {
+        int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        if(useCount == 0){
             return false;
-        } else {
-            return true;
+        }else {
+                return true;
         }
     }
-
     @Override
     public Object run() throws ZuulException {
 
@@ -84,26 +72,31 @@ public class SuqianNanKangReqFilter extends ZuulFilter {
             HttpServletRequest httpServletRequest = requestContext.getRequest();
             String api_id = httpServletRequest.getHeader("api_id");
 
-            // 获取请求参数
+            // 判断redis中是否有数据
+            String redisKey = "token:" + api_id;
+            String token = "Bearer " + getProviceToken(redisKey);
+
+            requestContext.addZuulRequestHeader("Secret","5a9a0db0-387a-4daa-9aac-4ed9f70a50cb@3b91c09c2c254e3981466132faf8360d");
+            requestContext.addZuulRequestHeader("Authorization",token);
+
             InputStream inReq = httpServletRequest.getInputStream();
             String requestBody = IOUtils.toString(inReq,Charset.forName("UTF-8"));
-            log.info("南康请求JSON：" + requestBody);
-
-            // 使用南康加密
-            String requestBodyByNankang = EncrypterAESTool.encryptByStr(requestBody,NanKangKey);
-            log.info("南康加参数加密后：" + requestBodyByNankang);
-
-            JSONObject contryReqJson = new JSONObject();
-            contryReqJson.put("edata",requestBodyByNankang);
-            log.info("转发南康JSON字符串：" + contryReqJson);
-
 
             // 重新配置请求体
             // 将JSON设置到请求体中，并设置请求方式为POST
-            String newbody = contryReqJson.toJSONString();
             // BODY体设置
-            final byte[] reqBodyBytes = newbody.getBytes("UTF-8");
+            final byte[] reqBodyBytes = requestBody.getBytes();
             requestContext.setRequest(new HttpServletRequestWrapper(httpServletRequest) {
+
+                @Override
+                public String getMethod() {
+                    return "POST";
+                }
+
+                @Override
+                public String getContentType() {
+                    return "application/json;charset=utf-8";
+                }
 
                 @Override
                 public ServletInputStream getInputStream() throws IOException {
@@ -121,26 +114,35 @@ public class SuqianNanKangReqFilter extends ZuulFilter {
                 }
 
             });
-
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.NANKANG_ERROR, "转发南康接口异常");
+            throw new ZtgeoBizZuulException(e, CodeMsg.PROVICESHARED_ERROR, "转发国家共享接口异常");
         }
 
 
         return null;
     }
 
-    // 序号获取与配置
-    private synchronized int getXuHao(String configKey) {
+    // token获取与配置
+    private synchronized String getProviceToken(String configKey) {
         boolean totalIsHasKey = redisTemplate.hasKey(configKey);
+
+        // 不存在
         if (!totalIsHasKey) {
-            redisTemplate.opsForValue().set(configKey, "1");
-            redisTemplate.expire(configKey, 2, TimeUnit.DAYS);
-            return 1;
-        } else {
-            int xuhao = Integer.valueOf(redisTemplate.opsForValue().get(configKey)) + 1;
-            redisTemplate.opsForValue().set(configKey, String.valueOf(xuhao));
-            return xuhao;
+            String token = null;
+            String tokenUrl = "https://2.211.38.98:8343/v1/apigw/oauth2/token";
+            String tokenParam = "grant_type=client_credentials&client_id=8947f32223bf4174bc7a014a96666ffc&client_secret=2805d50ef71246d3a394e078ba4a68fc&scope=default";
+            String tokenRespStr = HttpOperation.sendPostByApplicationXwwwFromUrlendcoded(tokenUrl,tokenParam);
+            JSONObject tokenRespJson = JSONObject.parseObject(tokenRespStr);
+            token = tokenRespJson.getString("access_token");
+
+            redisTemplate.opsForValue().set(configKey, token);
+            redisTemplate.expire(configKey, 3333, TimeUnit.SECONDS);
+
+            return token;
+        }else{
+            // 存在
+            String token = redisTemplate.opsForValue().get(configKey);
+            return token;
         }
     }
 }

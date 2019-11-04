@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Post_type;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -9,12 +9,10 @@ import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.utils.StreamOperateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;

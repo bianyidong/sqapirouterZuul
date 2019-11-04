@@ -1,4 +1,4 @@
-package com.ztgeo.suqian.filter;
+package com.ztgeo.suqian.filter.Pre_type;
 
 import com.isoftstone.sign.SignGeneration;
 import com.netflix.zuul.ZuulFilter;
@@ -9,7 +9,6 @@ import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiCitySharedConfig;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiCitySharedConfigRepository;
-import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
