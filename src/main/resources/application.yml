@@ -35,6 +35,9 @@ server:
   port: 8001
 zuul:
   ignored-patterns: /ztgeoNotice/**,/route/**
+  SendErrorFilter:
+    error:
+      disable: true
   host:
     connect-timeout-millis: 60000
     socket-timeout-millis: 60000

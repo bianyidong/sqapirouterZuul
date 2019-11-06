@@ -82,14 +82,15 @@ public class ResponseSafeToDataFilter extends ZuulFilter {
         InputStream inputStreamNew = null;
         try {
             RequestContext ctx = RequestContext.getCurrentContext();
+
             inputStream = ctx.getResponseDataStream();
             String userID = ctx.getRequest().getHeader("from_user");
             String apiID = ctx.getRequest().getHeader("api_id");
             //获取记录主键ID(来自routing过滤器保存的上下文)
-            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
-            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
-            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
-                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "返回安全解密过滤器访问者IP或记录ID未获取到");
+//            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
+//            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
+//            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
+//                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "返回安全解密过滤器访问者IP或记录ID未获取到");
             //获取接收方机构的密钥
 //            List<ApiBaseInfo> list = apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
 //            ApiBaseInfo apiBaseInfo = list.get(0);
@@ -144,7 +145,6 @@ public class ResponseSafeToDataFilter extends ZuulFilter {
                 String rspEncryptData = jsonresponseBody.get("data").toString();
                 String rspSignData = jsonresponseBody.get("sign").toString();
 
-
                 // 解密
                 String rspDecryptData = CryptographyOperation.aesDecrypt(Symmetric_pubkeyapiUserIDJson, rspEncryptData);
                 jsonresponseBody.put("data", rspDecryptData);
@@ -156,13 +156,12 @@ public class ResponseSafeToDataFilter extends ZuulFilter {
             } else {
                 log.info("返回安全解密过滤器记录完成");
             }
-            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, recordID);
-            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
+//            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, recordID);
+//            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             return null;
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z, "返回安全解密过滤器post异常", z.nStatusCode, z.errorCause);
-        } catch (Exception s) {
-            throw new ZtgeoBizZuulException(s, CodeMsg.RSPDATA_ERROR, "内部异常");
+        }  catch (Exception s) {
+            log.info("20014-共享平台返回解密过滤器异常",s);
+            throw new RuntimeException("20014-共享平台返回解密过滤器异常");
         } finally {
             ResponseSafeToSignFilter.getFindlly(inputStream, inputStreamOld, inputStreamNew);
         }

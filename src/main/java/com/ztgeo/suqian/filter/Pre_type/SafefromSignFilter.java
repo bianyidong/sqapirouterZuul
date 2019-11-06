@@ -19,6 +19,7 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.cloud.netflix.zuul.util.ZuulRuntimeException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
@@ -44,12 +45,6 @@ public class SafefromSignFilter extends ZuulFilter {
 
     @Resource
     private ApiJgtoPtFilterRepository apiJgtoPtFilterRepository;
-//    @Autowired
-//    private RedisOperator redis;
-//    @Resource
-//    private UserKeyInfoRepository userKeyInfoRepository;
-//    @Resource
-//    private ApiUserFilterRepository apiUserFilterRepository;
 
     @Override
     public Object run() throws ZuulException {
@@ -57,7 +52,9 @@ public class SafefromSignFilter extends ZuulFilter {
             log.info("=================进入安全请求方密钥验签过滤器,=====================");
             // 获取request
             RequestContext ctx = RequestContext.getCurrentContext();
+            ctx.getResponse();
             HttpServletRequest request = ctx.getRequest();
+
             //1.获取heard中的userID
             String userID=request.getHeader("from_user");
             //2.获取body中的加密和加签数据并验签
@@ -68,7 +65,7 @@ public class SafefromSignFilter extends ZuulFilter {
             String sign=jsonObject.get("sign").toString();
             if (StringUtils.isBlank(data) || StringUtils.isBlank(sign)) {
                 log.info("参数错误，未获取到数据或签名");
-                throw new ZtgeoBizZuulException(CodeMsg.PARAMS_ERROR, "未获取到安全请求方密钥验签过滤器数据或签名");
+                throw new RuntimeException("10005-参数异常");
             }
             //获取redis中的key值
 //            String str = redis.get(USER_REDIS_SESSION +":"+userID);
@@ -95,17 +92,17 @@ public class SafefromSignFilter extends ZuulFilter {
             Sign_pub_key=apiJgtoPtFilter.getPubKey();
             // 验证签名
             boolean verifyResult = CryptographyOperation.signatureVerify(Sign_pub_key, data, sign);
-            if (Objects.equals(verifyResult, false))
-                throw new ZtgeoBizRuntimeException(CodeMsg.SIGN_ERROR);
+            if (Objects.equals(verifyResult, false)){
+                log.info("安全请求方密钥验签过滤器验签失败");
+                throw new RuntimeException("10002-验签失败");
+            }
 
             ctx.set(GlobalConstants.SENDBODY, body);
             return null;
 
-           } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z.getMessage(), z.nStatusCode, z.errorCause);
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new ZtgeoBizZuulException(CodeMsg.FROMSIGN_ERROR);
+           }  catch (Exception e){
+            log.info("20008-共享平台请求方验签过滤器内部异常",e);
+          throw new RuntimeException("20008-共享平台请求方验签过滤器内部异常");
         }
     }
 

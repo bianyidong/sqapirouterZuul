@@ -114,7 +114,7 @@ public class NationalSharedRespFilter extends ZuulFilter {
         } catch (Exception e) {
             log.info("转发国家级共享接口响应过滤器异常",e);
             log.info("-------------结束---进入国家级接口转发响应过滤器-------------");
-            throw new ZtgeoBizZuulException(e, CodeMsg.NATIONALSHARED_RESP_ERROR, "转发国家级共享接口响应过滤器异常");
+            throw new RuntimeException("30013-转发国家级共享接口响应过滤器异常");
         }
         log.info("-------------结束---进入国家级接口转发响应过滤器-------------");
         return null;

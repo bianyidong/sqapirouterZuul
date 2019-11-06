@@ -93,7 +93,7 @@ public class FlowFilter extends ZuulFilter {
                     //requestContext.setSendZuulResponse(false);
                     // 设置返回码
                     //requestContext.setResponseStatusCode(401);
-                    throw new ZtgeoBizZuulException(CodeMsg.FAILMAXSCOUNT,"限流访问异常");
+                    throw new RuntimeException("20024-接口已达最大访问量");
 
                 }
 
@@ -138,16 +138,14 @@ public class FlowFilter extends ZuulFilter {
 //                            requestContext.setSendZuulResponse(false);
 //                            // 设置返回码
 //                            requestContext.setResponseStatusCode(401);
-                            throw new ZtgeoBizZuulException(CodeMsg.FAILQUILK,"限流访问异常");
+                            throw new RuntimeException("20025-请求过于频繁");
                         }
                     }
                 }
             }
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z.getMessage(), z.nStatusCode, z.errorCause);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("异常啦！");
+            log.info("20026-请求限流过滤器异常",e);
+            System.out.println("20026-请求限流过滤器异常");
         }
         return null;
     }

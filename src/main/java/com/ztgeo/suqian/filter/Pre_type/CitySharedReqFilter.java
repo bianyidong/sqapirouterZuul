@@ -165,7 +165,8 @@ public class CitySharedReqFilter extends ZuulFilter {
             log.info("已加签，待转发map<requestQueryParams>：" + requestQueryParams);
 
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.CITY_ERROR, "转发市级共享接口异常");
+            log.info("30015-转发市级共享接口异常",e);
+            throw new RuntimeException("30015-转发市级共享接口异常");
         }
         return null;
     }

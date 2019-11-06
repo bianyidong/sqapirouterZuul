@@ -37,10 +37,6 @@ public class SafefromDataFilter extends ZuulFilter {
     private String from_user;
     private String Symmetric_pubkey;
     private String uri;
-//    @Resource
-//    private UserKeyInfoRepository userKeyInfoRepository;
-//    @Autowired
-//    private RedisOperator redis;
     @Resource
     private ApiJgtoPtFilterRepository apiJgtoPtFilterRepository;
 
@@ -62,8 +58,10 @@ public class SafefromDataFilter extends ZuulFilter {
             JSONObject jsonObject = JSON.parseObject(body);
             String data=jsonObject.get("data").toString();
             String sign=jsonObject.get("sign").toString();
-            if (StringUtils.isBlank(data) || StringUtils.isBlank(sign))
-                throw new ZtgeoBizZuulException(CodeMsg.PARAMS_ERROR, "未获取到安全密钥请求方解密验证过滤器数据或签名");
+            if (StringUtils.isBlank(data) || StringUtils.isBlank(sign)){
+                throw new RuntimeException("未获取到安全密钥请求方解密验证过滤器数据或签名");
+            }
+
             //获取redis中的key值
 //            String str = redis.get(USER_REDIS_SESSION +":"+userID);
 //            if (StringUtils.isBlank(str)){
@@ -95,11 +93,9 @@ public class SafefromDataFilter extends ZuulFilter {
             ctx.set(GlobalConstants.SENDBODY, newbody);
            return getObject(ctx, request, newbody);
 
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z.getMessage(), z.nStatusCode, z.errorCause);
         } catch (Exception e){
-            e.printStackTrace();
-            throw new ZtgeoBizZuulException(CodeMsg.FROMDATA_ERROR);
+            log.info("20009-共享平台请求方解密过滤器内部异常",e);
+            throw new RuntimeException("20009-共享平台请求方解密过滤器内部异常");
         }
     }
 

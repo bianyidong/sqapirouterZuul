@@ -12,10 +12,13 @@ import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.HttpOperation;
 import io.micrometer.core.instrument.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletInputStream;
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class ProvinceSharedReqFilter extends ZuulFilter {
-
+    private Logger log = LoggerFactory.getLogger(this.getClass());
     @Resource
     private ApiUserFilterRepository apiUserFilterRepository;
     @Resource
@@ -115,7 +118,8 @@ public class ProvinceSharedReqFilter extends ZuulFilter {
 
             });
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.PROVICESHARED_ERROR, "转发国家共享接口异常");
+            log.info("30014-转发省级共享接口异常");
+            throw new RuntimeException("30014-转发省级共享接口异常");
         }
 
 

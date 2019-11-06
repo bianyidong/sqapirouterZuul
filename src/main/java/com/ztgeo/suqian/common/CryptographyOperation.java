@@ -3,6 +3,9 @@ package com.ztgeo.suqian.common;
 
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -24,7 +27,7 @@ import java.util.UUID;
  * @version 2018-12-11
  */
 public class CryptographyOperation {
-
+    private static Logger log = LoggerFactory.getLogger(CryptographyOperation.class);
     /**
      * 生成用于签名的公钥私钥对，返回公钥私钥字符串。
      * 不对外开放，仅用于测试
@@ -108,18 +111,16 @@ public class CryptographyOperation {
     public static boolean signatureVerify(String publicKeyStr, String data, String signStr) {
         try {
             if (StringUtils.isBlank(publicKeyStr) || StringUtils.isBlank(data) || StringUtils.isBlank(signStr))
-                throw new ZtgeoBizRuntimeException(CodeMsg.SDK_SIGN_VERIFY_FAIL, "公钥或待加签数据或原始签名无效，无法验签");
+                throw new RuntimeException("10005-公钥或待加签数据或原始签名无效，无法验签");
             byte[] decode = Base64.getDecoder().decode(signStr); // 签名反编译
             PublicKey publicKey = getPublicKeyFromStr(publicKeyStr);
             Signature signature = Signature.getInstance(CryptographyConstants.MD5_WIEH_RSA);
             signature.initVerify(publicKey); //填充公钥
             signature.update(data.getBytes(StandardCharsets.UTF_8)); //字符集
             return signature.verify(decode);
-        } catch (ZtgeoBizRuntimeException e) {
-            throw new ZtgeoBizRuntimeException(CodeMsg.SDK_SIGN_GENERATE_FAIL, e.getErrorCause());
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ZtgeoBizRuntimeException(CodeMsg.SDK_INTER_ERROR,"验证签名失败");
+            log.info("10002-验签失败",e);
+            throw new RuntimeException("10002-验签失败");
         }
     }
 
@@ -158,7 +159,7 @@ public class CryptographyOperation {
     public static String aesDecrypt(String aesKey, String content) {
         try {
             if (StringUtils.isBlank(aesKey) || StringUtils.isBlank(content))
-                throw new ZtgeoBizRuntimeException(CodeMsg.SDK_DECRYPT_FAIL, "对称密钥或待加密数据无效，无法解密");
+                throw new RuntimeException("10005-对称密钥或待加密数据无效，无法解密");
             Cipher cipher = Cipher.getInstance(CryptographyConstants.AES_CBC_PCK_ALG);
             IvParameterSpec iv = new IvParameterSpec(initIv(CryptographyConstants.AES_CBC_PCK_ALG));
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(Base64.getDecoder().decode(aesKey.getBytes()),

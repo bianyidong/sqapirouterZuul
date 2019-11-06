@@ -85,10 +85,10 @@ public class ResponseSafeToSignFilter extends ZuulFilter {
             inputStream = ctx.getResponseDataStream();
             String apiID=ctx.getRequest().getHeader("api_id");
             //获取记录主键ID(来自routing过滤器保存的上下文)
-            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
-            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
-            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
-                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "返回安全验签过滤器访问者IP或记录ID未获取到");
+//            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
+//            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
+//            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
+//                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "返回安全验签过滤器访问者IP或记录ID未获取到");
             //获取接收方机构的密钥
 //            List<ApiBaseInfo> list =apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
 //            ApiBaseInfo apiBaseInfo=list.get(0);
@@ -151,13 +151,12 @@ public class ResponseSafeToSignFilter extends ZuulFilter {
             }else {
                 log.info("返回安全验签过滤器记录完成");
             }
-            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY,recordID);
-            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
+//            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY,recordID);
+//            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             return null;
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z,"post返回安全验签过滤器异常", z.nStatusCode, z.errorCause);
-        } catch (Exception s) {
-            throw new ZtgeoBizZuulException(s,CodeMsg.RSPSIGN_ERROR, "内部异常");
+        }  catch (Exception s) {
+            log.info("20013-共享平台返回验签过滤器内部异常",s);
+            throw new RuntimeException("20013-共享平台返回验签过滤器内部异常");
         } finally {
             getFindlly(inputStream, inputStreamOld, inputStreamNew);
         }

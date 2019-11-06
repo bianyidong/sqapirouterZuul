@@ -13,6 +13,8 @@ import com.ztgeo.suqian.entity.ag_datashare.ApiJsonKeyFilter;
 import com.ztgeo.suqian.repository.agShare.ApiJsonKeyFilterRepository;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -25,7 +27,7 @@ import java.util.List;
 
 @Component
 public class JSONFieldFilter extends ZuulFilter {
-
+    private Logger log = LoggerFactory.getLogger(this.getClass());
     @Resource
     private ApiUserFilterRepository apiUserFilterRepository;
     @Resource
@@ -57,7 +59,7 @@ public class JSONFieldFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-
+        log.info("-------------开始---进入JSON-KEY值过滤器-------------");
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
         String apiId = httpServletRequest.getHeader("api_id");
@@ -95,7 +97,8 @@ public class JSONFieldFilter extends ZuulFilter {
             }
 
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(CodeMsg.JSON_KEY_VALUE_FILTER_ERROR);
+            log.info("20023-JSON响应KEY-VALUE过滤异常请检查过滤规则",e);
+            throw new RuntimeException("20023-JSON响应KEY-VALUE过滤异常请检查过滤规则");
         }
         if (jsonObject.containsKey("data") && jsonObject.containsKey("sign")) {
             jsonObject.put("data", json);

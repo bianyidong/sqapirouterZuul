@@ -9,8 +9,11 @@ import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiTimeFilterRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.TimeCheckUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +27,7 @@ import java.util.List;
  */
 @Component
 public class TimeFilter extends ZuulFilter {
-
+    private Logger log = LoggerFactory.getLogger(this.getClass());
     @Resource
     private ApiUserFilterRepository apiUserFilterRepository;
 
@@ -84,7 +87,8 @@ public class TimeFilter extends ZuulFilter {
                     timeFlag = TimeCheckUtils.hourMinuteBetween(stime, etime);
                 }
                 if (!timeFlag) {
-                    throw new ZtgeoBizZuulException(CodeMsg.TIME_FILTER_ERROR);
+                    log.info("20022-非合法时间请求，拒绝访问");
+                    throw new RuntimeException("20022-非合法时间请求，拒绝访问");
                 }
             }
         }

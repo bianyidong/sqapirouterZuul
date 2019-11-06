@@ -77,7 +77,7 @@ public class IPFilter extends ZuulFilter {
                 log.info("接口已配置IP过滤器，但是没有配置IP，默认全网IP可访问");
             } else {
                 if (!judgeIPRule(apiIpWhitelistFilterList, current_ip)) {
-                    throw new ZtgeoBizZuulException(CodeMsg.IP_FILTER_ERROR);
+                    throw new RuntimeException("20021-无法识别请求IP，拒绝访问");
                 }
             }
         }

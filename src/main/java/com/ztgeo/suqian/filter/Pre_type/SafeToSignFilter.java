@@ -66,7 +66,7 @@ public class SafeToSignFilter extends ZuulFilter {
             String data=jsonObject.get("data").toString();
             String sign=jsonObject.get("sign").toString();
             if (StringUtils.isBlank(data) && StringUtils.isBlank(sign))
-                throw new ZtgeoBizZuulException(CodeMsg.PARAMS_ERROR, "未获取到安全密钥共享平台重新加签验证过滤器数据或签名");
+                throw new RuntimeException("未获取到安全密钥共享平台重新加签验证过滤器数据或签名");
 //            List<com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo> list =apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
 //            if (!Objects.equals(null, list) && list.size() != 0) {
 //                ApiBaseInfo apiBaseInfo = list.get(0);
@@ -103,11 +103,9 @@ public class SafeToSignFilter extends ZuulFilter {
             String newbody = jsonObject.toString();
             ctx.set(GlobalConstants.SENDBODY, newbody);
             return getObject(ctx, request, newbody);
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z.getMessage(), z.nStatusCode, z.errorCause);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ZtgeoBizZuulException(CodeMsg.TOSIGN_ERROR);
+        }catch (Exception e) {
+            log.info("20010-共享平台请求方重新加签过滤器异常");
+            throw new RuntimeException("20010-共享平台请求方重新加签过滤器异常");
         }
     }
 

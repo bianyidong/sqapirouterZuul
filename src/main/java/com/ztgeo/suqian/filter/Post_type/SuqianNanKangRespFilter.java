@@ -112,6 +112,7 @@ public class SuqianNanKangRespFilter extends ZuulFilter {
             requestContext.setResponseBody(responseBodyJson.toJSONString());
 
         } catch (Exception e) {
+            log.info("转发南康返回接口异常");
             throw new ZtgeoBizZuulException(e, CodeMsg.NANKANG_ERROR, "转发南康返回接口异常");
         }
         return null;

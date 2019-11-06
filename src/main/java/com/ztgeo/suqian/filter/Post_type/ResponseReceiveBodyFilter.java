@@ -17,6 +17,7 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 
@@ -58,7 +59,7 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
             RequestContext ctx = RequestContext.getCurrentContext();
             String userID;
             String requserID= ctx.getRequest().getHeader("from_user");
-
+            HttpServletResponse response = ctx.getResponse();
             if(StringUtils.isEmpty(requserID)){
                 String ctxFromUser = ctx.get("from_user").toString();
                 if(StringUtils.isEmpty(ctxFromUser)){
@@ -80,15 +81,16 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
             int statuscode=ctx.getResponseStatusCode();
             if (statuscode==200){
                 agLogDao.updateResponsedateById(rspBody, "0",recordID.toString());
+                response.addHeader("gx_resp_code","10000");
+                response.addHeader("gx_resp_logid",recordID.toString());
             }else {
                 agLogDao.updateResponsedateById(rspBody, "1",recordID.toString());
             }
             log.info("记录完成");
             return null;
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z, "post日志过滤器异常", z.nStatusCode, z.errorCause);
-        } catch (Exception s) {
-            throw new ZtgeoBizZuulException(s, CodeMsg.FAIL, "post日志过滤器内部异常");
+        }catch (Exception s) {
+            log.info("20027-post日志过滤器内部异常",s);
+            throw new RuntimeException("20027-post日志过滤器内部异常");
         }
     }
 }

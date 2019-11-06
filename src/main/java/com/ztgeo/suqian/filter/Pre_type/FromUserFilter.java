@@ -8,8 +8,11 @@ import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.repository.agShare.UserKeyInfoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class FromUserFilter extends ZuulFilter {
-
+    private Logger log = LoggerFactory.getLogger(this.getClass());
     @Resource
     private AGShareDao agShareDao;
     @Resource
@@ -70,10 +73,12 @@ public class FromUserFilter extends ZuulFilter {
         if(from_user != null){
             int count = userKeyInfoRepository.countUserKeyInfosByUserRealIdEquals(from_user);
             if(count == 0){
-                throw new ZtgeoBizZuulException(CodeMsg.AUTHENTICATION_FILTER_ERROR);
+                log.info("20001-无法识别身份，拒绝访问");
+                throw new RuntimeException("20001-无法识别身份，拒绝访问");
             }
         }else{
-            throw new ZtgeoBizZuulException(CodeMsg.AUTHENTICATION_FILTER_ERROR);
+            log.info("20001-无法识别身份，拒绝访问");
+            throw new RuntimeException("20001-无法识别身份，拒绝访问");
         }
         return null;
     }

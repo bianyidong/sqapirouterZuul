@@ -87,10 +87,10 @@ public class ResponseSafeAgainSignFilter extends ZuulFilter {
             inputStream = ctx.getResponseDataStream();
             String userID=ctx.getRequest().getHeader("from_user");
             //获取记录主键ID(来自routing过滤器保存的上下文)
-            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
-            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
-            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
-                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "返回重新加签名过滤器访问者IP或记录ID未获取到");
+//            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
+//            Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
+//            if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
+//                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "返回重新加签名过滤器访问者IP或记录ID未获取到");
             //获取redis中userID的key值
 //            String str = redis.get(USER_REDIS_SESSION +":"+userID);
 //            if (StringUtils.isBlank(str)){
@@ -149,13 +149,12 @@ public class ResponseSafeAgainSignFilter extends ZuulFilter {
             }else {
                 log.info("返回重新加签名过滤器记录完成");
             }
-            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY,recordID);
-            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
+//            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY,recordID);
+//            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             return null;
-        } catch (ZuulException z) {
-            throw new ZtgeoBizZuulException(z,"返回重新加签名过滤器Post异常", z.nStatusCode, z.errorCause);
-        } catch (Exception s) {
-            throw new ZtgeoBizZuulException(s,CodeMsg.AGARSPSIGN_ERROR, "内部异常");
+        }  catch (Exception s) {
+            log.info("20016-共享平台返回重新加签过滤器异常",s);
+            throw new RuntimeException("20016-共享平台返回重新加签过滤器异常");
         } finally {
             ResponseSafeToSignFilter.getFindlly(inputStream, inputStreamOld, inputStreamNew);
         }

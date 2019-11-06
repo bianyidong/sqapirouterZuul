@@ -122,7 +122,8 @@ public class SuqianNanKangReqFilter extends ZuulFilter {
             });
 
         } catch (Exception e) {
-            throw new ZtgeoBizZuulException(e, CodeMsg.NANKANG_ERROR, "转发南康接口异常");
+            log.info("30016-转发南康请求接口异常");
+            throw new RuntimeException("30016-转发南康请求接口异常");
         }
 
 

@@ -55,8 +55,6 @@ public class AddRequestBodyFilter extends ZuulFilter {
     private BaseUserRepository baseUserRepository;
     @Resource
     private AGLogDao agLogDao;
-    @Value("${customAttributes.httpName}")
-    private String httpName; // 存储用户发送数据的数据库名
     private String UserFilter = "";
 
     @Override
@@ -69,27 +67,21 @@ public class AddRequestBodyFilter extends ZuulFilter {
             String uri = request.getRequestURI();
             String url = request.getRequestURL().toString();
             String type = request.getContentType();
-            String s = request.getSession().toString();
-            String aa = request.getRequestedSessionId();
-            //String sendbody = ctx.get(GlobalConstants.SENDBODY).toString();
+            String id = com.ztgeo.suqian.utils.StringUtils.getShortUUID();
+            String accessClientIp = HttpUtils.getIpAdrress(request);
+            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, id);
+            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             //2.获取body中的加密和加签数据并验签
             InputStream in = request.getInputStream();
             String requestBody = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
             log.info("访问者IP:{}", HttpUtils.getIpAdrress(request));
             //1.获取heard中的userID和ApiID
-            String apiID;
-            String userID;
+            String apiID=null;
+            String userID = null;
             String reqapiID = request.getHeader("api_id");
             String requserID = request.getHeader("from_user");
             if (StringUtils.isEmpty(reqapiID) || StringUtils.isEmpty(requserID)) {
-                String ctxApiId = ctx.get("api_id").toString();
-                String ctxFromUser = ctx.get("from_user").toString();
-                if (StringUtils.isEmpty(ctxApiId)) {
-                    throw new ZtgeoBizZuulException(CodeMsg.GETNULL_ERROR);
-                } else {
-                    apiID = ctxApiId;
-                    userID = ctxFromUser;
-                }
+                log.info("20012-请求日志过滤器未获取到from_user或者api_id");
             } else {
                 apiID = reqapiID;
                 userID = requserID;
@@ -106,8 +98,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
             String userName = baseUser.getName();
             List<ApiBaseInfo> list = apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
             ApiBaseInfo apiBaseInfo = list.get(0);
-            String id = com.ztgeo.suqian.utils.StringUtils.getShortUUID();
-            String accessClientIp = HttpUtils.getIpAdrress(request);
+
             LocalDateTime localTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             DateTimeFormatter dateTimeFormatterYmd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -131,14 +122,11 @@ public class AddRequestBodyFilter extends ZuulFilter {
             apiAccessRecord.setApiOwnerId(apiBaseInfo.getApiOwnerId());
             apiAccessRecord.setStatus("1");
             agLogDao.saveApiAccessRecord(apiAccessRecord);
-            ctx.set(GlobalConstants.RECORD_PRIMARY_KEY, id);
-            ctx.set(GlobalConstants.ACCESS_IP_KEY, accessClientIp);
             return getObject(ctx, request, requestBody);
             //return null;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.info("请求方日志过滤器异常");
-            throw new ZtgeoBizZuulException(CodeMsg.ADDSENDBODY_EXCEPTION, "内部异常");
+            log.info("请求方日志过滤器异常",e);
+            throw new RuntimeException("20018-请求方日志过滤器异常");
         }
     }
 
