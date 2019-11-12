@@ -5,8 +5,11 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
 import com.ztgeo.suqian.dao.AGShareDao;
+import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.msg.CodeMsg;
+import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import com.ztgeo.suqian.repository.agShare.ApiUserMemberRepository;
 import com.ztgeo.suqian.repository.agShare.UserKeyInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +34,9 @@ public class FromUserFilter extends ZuulFilter {
     @Resource
     private AGShareDao agShareDao;
     @Resource
-    private UserKeyInfoRepository userKeyInfoRepository;
-
+    private ApiUserMemberRepository apiUserMemberRepository;
+    @Resource
+    private ApiBaseInfoRepository apiBaseInfoRepository;
     private String api_id;
     private boolean isConfig = false;
 
@@ -71,8 +75,10 @@ public class FromUserFilter extends ZuulFilter {
 
         // 从数据库中判断是否存在from_user
         if(from_user != null){
-            int count = userKeyInfoRepository.countUserKeyInfosByUserRealIdEquals(from_user);
-            if(count == 0){
+            ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.queryApiBaseInfoByApiId(api_id);
+            String apiOwnerid = apiBaseInfo.getApiOwnerId();
+            int count = apiUserMemberRepository.countApiUserMembersByApiIdAndUserIdEquals(api_id,from_user);
+            if(count == 0&&(!apiOwnerid.equals(from_user))){
                 log.info("20001-无法识别身份，拒绝访问");
                 throw new RuntimeException("20001-无法识别身份，拒绝访问");
             }

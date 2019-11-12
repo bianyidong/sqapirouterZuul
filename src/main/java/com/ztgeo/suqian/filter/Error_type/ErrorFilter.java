@@ -51,6 +51,7 @@ public class ErrorFilter extends ZuulFilter {
                 logger.info("平台网关内部错误,请检查网络等状态");
                 response.addHeader("gx_resp_code","10006");
                 response.addHeader("gx_resp_logid",gx_log_id);
+                response.addHeader("gx_resp_msg", URLEncoder.encode("平台网关内部错误，转发失败","UTF-8"));
             }else {
                 String caseMsg = exception.getCause().getMessage();
 

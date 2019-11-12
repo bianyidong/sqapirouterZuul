@@ -158,7 +158,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return -98;
+        return -99;
     }
 
     @Override

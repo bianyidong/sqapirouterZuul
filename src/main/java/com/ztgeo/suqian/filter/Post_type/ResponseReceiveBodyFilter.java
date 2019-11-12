@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 
@@ -83,6 +84,7 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
                 agLogDao.updateResponsedateById(rspBody, "0",recordID.toString());
                 response.addHeader("gx_resp_code","10000");
                 response.addHeader("gx_resp_logid",recordID.toString());
+                response.addHeader("gx_resp_msg", URLEncoder.encode("转发成功","UTF-8"));
             }else {
                 agLogDao.updateResponsedateById(rspBody, "1",recordID.toString());
             }
