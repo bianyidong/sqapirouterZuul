@@ -86,19 +86,18 @@ public class AddRequestBodyFilter extends ZuulFilter {
                 apiID = reqapiID;
                 userID = requserID;
             }
-            List<ApiUserFilter> listApiuserFilter = apiUserFilterRepository.findApiUserFiltersByApiId(apiID);
-            if (listApiuserFilter.size() == 0) {
-                log.info("该接口没有配置需要配置的过滤器");
-            } else {
-                for (ApiUserFilter apiUserFilter : listApiuserFilter) {
-                    UserFilter = UserFilter + apiUserFilter.getFilterName() + ",";
-                }
-            }
+//            List<ApiUserFilter> listApiuserFilter = apiUserFilterRepository.findApiUserFiltersByApiId(apiID);
+//            if (listApiuserFilter.size() == 0) {
+//                log.info("该接口没有配置需要配置的过滤器");
+//            } else {
+//                for (ApiUserFilter apiUserFilter : listApiuserFilter) {
+//                    UserFilter = UserFilter + apiUserFilter.getFilterName() + ",";
+//                }
+//            }
             BaseUser baseUser = baseUserRepository.findByIdEquals(userID);
             String userName = baseUser.getName();
             List<ApiBaseInfo> list = apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(apiID);
             ApiBaseInfo apiBaseInfo = list.get(0);
-
             LocalDateTime localTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             DateTimeFormatter dateTimeFormatterYmd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
