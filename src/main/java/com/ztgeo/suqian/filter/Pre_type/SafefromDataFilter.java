@@ -55,10 +55,11 @@ public class SafefromDataFilter extends ZuulFilter {
             //2.获取body中的加密和加签数据并做解密
             InputStream in = request.getInputStream();
             String body = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
+            log.info("解密前数据"+body);
             JSONObject jsonObject = JSON.parseObject(body);
             String data=jsonObject.get("data").toString();
             String sign=jsonObject.get("sign").toString();
-            if (StringUtils.isBlank(data) || StringUtils.isBlank(sign)){
+            if (StringUtils.isBlank(data)){
                 throw new RuntimeException("未获取到安全密钥请求方解密验证过滤器数据或签名");
             }
 
@@ -90,6 +91,7 @@ public class SafefromDataFilter extends ZuulFilter {
             jsonObject.put("data",reqDecryptData);
             jsonObject.put("sign",sign);
             String newbody=jsonObject.toString();
+            log.info("解密后数据"+newbody);
             ctx.set(GlobalConstants.SENDBODY, newbody);
            return getObject(ctx, request, newbody);
 

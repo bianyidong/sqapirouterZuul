@@ -2,10 +2,14 @@ package com.ztgeo.suqian.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.isoftstone.sign.SignGeneration;
+import com.ztgeo.suqian.dao.AGLogDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.ApiCitySharedConfig;
+import com.ztgeo.suqian.entity.ag_datashare.BaseUser;
+import com.ztgeo.suqian.entity.ag_log.ApiAccessRecord;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiCitySharedConfigRepository;
+import com.ztgeo.suqian.repository.agShare.BaseUserRepository;
 import com.ztgeo.suqian.utils.HttpClientUtil;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
 import org.slf4j.Logger;
@@ -15,10 +19,15 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -30,9 +39,14 @@ public class RxdbService {
     private ApiCitySharedConfigRepository apiCitySharedConfigRepository;
     @Resource
     private ApiBaseInfoRepository apiBaseInfoRepository;
+    @Resource
+    private BaseUserRepository baseUserRepository;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Resource
+    private AGLogDao agLogDao;
 
+    private String UserFilter = "";
 
     public String rxdbservice(String param, String api_id) {
         String result = "";
@@ -63,18 +77,15 @@ public class RxdbService {
             map.put("header_Secret", "5a9a0db0-387a-4daa-9aac-4ed9f70a50cb@3b91c09c2c254e3981466132faf8360d");
             map.put("header_Authorization", "Bearer " + getProviceToken(redisKey));
             map.put("request_body", param);
-
             sign = SignGeneration.generationSign(map, sk);
             map.put("sign", sign);
-            System.out.println(map);
-            System.out.println(map.get("sign"));
             result = HttpClientUtil.httpPostRequest(url, map);
         } catch (IOException e) {
-            log.info("转发省厅接口异常！", e);
-            throw new RuntimeException("转发省厅接口异常");
+            log.info("转发人像对比接口异常！", e);
+            throw new RuntimeException("转发人像对比接口异常");
         } catch (Exception e) {
-            log.info("转发省厅接口异常！", e);
-            throw new RuntimeException("转发省厅接口异常");
+            log.info("转发人像对比接口异常！", e);
+            throw new RuntimeException("转发人像对比接口异常");
         }
         return result;
     }

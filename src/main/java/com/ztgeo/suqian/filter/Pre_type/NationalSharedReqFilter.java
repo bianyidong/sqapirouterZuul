@@ -130,8 +130,8 @@ public class NationalSharedReqFilter extends ZuulFilter {
             contryHeadReqJson.put("requestType", requestType);
             contryHeadReqJson.put("cxqqdh", cxqqdh);
             contryHeadReqJson.put("businessNumber", businessNumber);
-
             // 配置请求体
+
             String encodeRequestBody = RSAUtils.encodeByPublic(requestBody, token);
 
             // 配置请求参数
