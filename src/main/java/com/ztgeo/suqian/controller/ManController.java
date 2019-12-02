@@ -89,7 +89,7 @@ public class ManController {
                 apiAccessRecord.setRequestData("");
                 apiAccessRecord.setResponseData(respStr);
                 apiAccessRecord.setApiOwnerId(apiBaseInfo.getApiOwnerId());
-                apiAccessRecord.setStatus("1");
+                apiAccessRecord.setStatus("0");
                 agLogDao.saveApiAccessRecord(apiAccessRecord);
                 httpServletResponse.addHeader("gx_resp_code","10000");
                 httpServletResponse.addHeader("gx_resp_msg", URLEncoder.encode("转发成功","UTF-8"));
