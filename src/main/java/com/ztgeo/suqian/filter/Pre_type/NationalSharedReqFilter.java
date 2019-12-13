@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletInputStream;
@@ -107,12 +108,17 @@ public class NationalSharedReqFilter extends ZuulFilter {
             String deptName = apiNotionalSharedConfig.getDeptName();
             String qxdm = apiNotionalSharedConfig.getQxdm();
 
-            // 获取当前日期
-            String currentDays = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            String configKey = currentDays + ":" + qxdm;
-            int xuHao = getXuHao(configKey);
-            String cxqqdh = currentDays + qxdm + String.format("%06d", xuHao);
-
+            /**
+             *  20191209  姜志伟要求修改
+             */
+            String cxqqdh = httpServletRequest.getHeader("cxqqdh");
+            if(StringUtils.isEmpty(cxqqdh)){
+                // 为空，非GF99参数，单独获取
+                String currentDays = new SimpleDateFormat("yyyyMMdd").format(new Date());
+                String configKey = currentDays + ":" + qxdm;
+                int xuHao = getXuHao(configKey);
+                cxqqdh = currentDays + qxdm + String.format("%06d", xuHao);
+            }
 
             InputStream inReq = httpServletRequest.getInputStream();
             String requestBody = IOUtils.toString(inReq, Charset.forName("UTF-8"));
