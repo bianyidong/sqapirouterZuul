@@ -109,7 +109,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
             String qxdm = apiNotionalSharedConfig.getQxdm();
 
             /**
-             *  20191209  姜志伟要求修改
+             *  20191209  姜志伟要求修改最高法接口
              */
             String cxqqdh = httpServletRequest.getHeader("cxqqdh");
             if(StringUtils.isEmpty(cxqqdh)){
