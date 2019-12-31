@@ -1,6 +1,5 @@
 package com.ztgeo.suqian.controller;
 
-import com.isoftstone.sign.SignGeneration;
 import com.ztgeo.suqian.dao.AGLogDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.BaseUser;
@@ -8,8 +7,7 @@ import com.ztgeo.suqian.entity.ag_log.ApiAccessRecord;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.BaseUserRepository;
 import com.ztgeo.suqian.service.RxdbService;
-import com.ztgeo.suqian.service.ShengService;
-import com.ztgeo.suqian.utils.HttpClientUtil;
+import com.ztgeo.suqian.service.XzService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
-public class ManController {
+public class XzController {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
     @Resource
@@ -40,20 +38,20 @@ public class ManController {
     @Resource
     private AGLogDao agLogDao;
     @Resource
-    private RxdbService rxdbService;
+    private XzService xzservice;
     private String UserFilter = "";
-    @RequestMapping(value = "/garx",method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-    @ApiOperation(value = "转发人像对比接口", notes = "为宿迁各程序调用国土资源政务外网接口提供转发", httpMethod = "POST")
+    @RequestMapping(value = "/realestate-supervise-exchange/api/v1/other-subject/query",method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @ApiOperation(value = "徐州请求省级代理接口", notes = "为徐州政务外网接口提供转发", httpMethod = "POST")
     @ResponseBody
     public String forwardCtrl(@RequestBody String param, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws UnsupportedEncodingException {
-        log.info("--------------------开始----人像对比接口---------------------");
+        log.info("--------------------开始----进入徐州转发请求过滤器---------------------");
         String requesturl=httpServletRequest.getRequestURL().toString();
         String api_id = httpServletRequest.getHeader("api_id");
         String userid = httpServletRequest.getHeader("from_user");
         String id = com.ztgeo.suqian.utils.StringUtils.getShortUUID();
         if(StringUtils.isEmpty(api_id)||StringUtils.isEmpty(userid)){
             log.info("api_id或者from_user为空!");
-            log.info("--------------------结束----人像对比接口---------------------");
+            log.info("--------------------结束----进入徐州转发转发请求过滤器---------------------");
             httpServletResponse.addHeader("gx_resp_code","20012");
             httpServletResponse.addHeader("gx_resp_msg", URLEncoder.encode("hear头信息from_user或者api_id没有获取到","UTF-8"));
             httpServletResponse.addHeader("gx_resp_logid",id);
@@ -72,7 +70,7 @@ public class ManController {
                 DateTimeFormatter dateTimeFormatterYmd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 String currentTime = dateTimeFormatter.format(localTime);
                 String currentymd = dateTimeFormatterYmd.format(localTime);
-                respStr = rxdbService.rxdbservice(param,api_id);
+                respStr = xzservice.Xzservice(param,api_id);
                 ApiAccessRecord apiAccessRecord = new ApiAccessRecord();
                 apiAccessRecord.setId(id);
                 apiAccessRecord.setApiId(api_id);
@@ -86,23 +84,23 @@ public class ManController {
                 apiAccessRecord.setUri(requesturl);
                 apiAccessRecord.setYearMonthDay(currentymd);
                 apiAccessRecord.setAccessTime(currentTime);
-                apiAccessRecord.setRequestData("");
+                apiAccessRecord.setRequestData(param);
                 apiAccessRecord.setResponseData(respStr);
                 apiAccessRecord.setApiOwnerId(apiBaseInfo.getApiOwnerId());
                 apiAccessRecord.setStatus("0");
                 agLogDao.saveApiAccessRecord(apiAccessRecord);
+                log.info("记录日志完成");
                 httpServletResponse.addHeader("gx_resp_code","10000");
                 httpServletResponse.addHeader("gx_resp_msg", URLEncoder.encode("转发成功","UTF-8"));
                 httpServletResponse.addHeader("gx_resp_logid",id);
             }catch (Exception e){
-                httpServletResponse.addHeader("gx_resp_code","20028");
-                httpServletResponse.addHeader("gx_resp_msg", URLEncoder.encode("人像对比异常","UTF-8"));
+                httpServletResponse.addHeader("gx_resp_code","20029");
+                httpServletResponse.addHeader("gx_resp_msg", URLEncoder.encode("徐州请求省级代理接口","UTF-8"));
                 httpServletResponse.addHeader("gx_resp_logid",id);
             }
             log.info("响应报文：" + respStr);
-            log.info("--------------------人像对比接口---------------------");
+            log.info("--------------------结束进入徐州转发转发请求过滤器---------------------");
             return respStr;
         }
-
     }
 }

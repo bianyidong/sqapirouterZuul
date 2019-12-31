@@ -50,7 +50,12 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        RequestContext requestContext = RequestContext.getCurrentContext();
+        if (!requestContext.sendZuulResponse()){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     @Override

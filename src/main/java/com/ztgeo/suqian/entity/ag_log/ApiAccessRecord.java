@@ -37,8 +37,8 @@ public class ApiAccessRecord implements Serializable {
     @Column(name = "api_url")
     private String apiUrl;
 
-	@Column(name = "filter_user")
-	private String filterUser;
+//	@Column(name = "filter_user")
+////	private String filterUser;
 	// 访问者IP
 	@Column(name = "type")
 	private String type;

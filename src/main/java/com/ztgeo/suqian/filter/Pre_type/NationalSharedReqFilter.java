@@ -70,7 +70,9 @@ public class NationalSharedReqFilter extends ZuulFilter {
         int configCount = apiNotionalSharedConfigRepository.countApiNotionalSharedConfigsByUseridEquals(apiOwnerid);
 
         log.info("国家级过滤器：userCount:" + useCount + "，configCount：" + configCount);
-
+        if (!requestContext.sendZuulResponse()){
+            return false;
+        }else {
         if (useCount == 0) {
             return false;
         } else {
@@ -80,7 +82,7 @@ public class NationalSharedReqFilter extends ZuulFilter {
                 return true;
             }
         }
-    }
+    }}
 
     @Override
     public Object run() throws ZuulException {

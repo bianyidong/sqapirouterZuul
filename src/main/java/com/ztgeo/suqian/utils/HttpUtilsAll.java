@@ -250,7 +250,7 @@ public class HttpUtilsAll {
 
             // 普通表单提交方式
             else {
-                System.out.println("dddddddddd");
+                //System.out.println("dddddddddd");
                 connection.header(CONTENT_TYPE, FORM_TYPE);
             }
 

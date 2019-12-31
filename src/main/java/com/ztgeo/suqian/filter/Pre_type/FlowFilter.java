@@ -145,7 +145,7 @@ public class FlowFilter extends ZuulFilter {
             }
         } catch (Exception e) {
             log.info("20026-请求限流过滤器异常",e);
-            System.out.println("20026-请求限流过滤器异常");
+            throw new RuntimeException("20026-请求限流过滤器异常");
         }
         return null;
     }

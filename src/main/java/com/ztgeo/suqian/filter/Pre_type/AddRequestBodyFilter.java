@@ -110,7 +110,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
             apiAccessRecord.setUserName(userName);
             apiAccessRecord.setApiName(apiBaseInfo.getApiName());
             apiAccessRecord.setApiUrl(apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath());
-            apiAccessRecord.setFilterUser(UserFilter);
+            //apiAccessRecord.setFilterUser(UserFilter);
             apiAccessRecord.setType(type);
             apiAccessRecord.setAccessClientIp(url);
             apiAccessRecord.setUri(uri);
@@ -157,7 +157,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return -99;
+        return -98;
     }
 
     @Override

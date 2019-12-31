@@ -43,8 +43,12 @@ public class ResponseFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
+        RequestContext ctx = RequestContext.getCurrentContext();
 
-        return true;
+        if (!ctx.sendZuulResponse()){
+            return false;
+        }else {
+        return true;}
     }
 
     @Override
@@ -58,10 +62,10 @@ public class ResponseFilter extends ZuulFilter {
             inputStream = ctx.getResponseDataStream();
             String rspBody = ctx.getResponseBody();
             //获取记录主键ID(来自routing过滤器保存的上下文)
-            Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
-            if (Objects.equals(null, recordID)) {
-                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "post通用过滤器访问者IP或记录ID未获取到");
-            }
+            //Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
+//            if (Objects.equals(null, recordID)) {
+//                throw new ZtgeoBizZuulException(CodeMsg.FAIL, "post通用过滤器访问者IP或记录ID未获取到");
+//            }
 //            String ContentType=ctx.getRequest().getContentType();
 //            if ("text/xml".equals(ContentType)) {
 //                log.info("请求为text/xml，返回日志不操作");
@@ -86,7 +90,8 @@ public class ResponseFilter extends ZuulFilter {
                 ctx.setResponseBody(rspBody);
                 log.info("post通用过滤器入库完成{}",rspBody);
             } else {
-                log.info("未接收到返回的任何数据,记录ID:{}", recordID);
+                //log.info("未接收到返回的任何数据,记录ID:{}", recordID);
+                log.info("未接收到返回的任何数据,记录ID:{}", "0000");
 
             }
 
