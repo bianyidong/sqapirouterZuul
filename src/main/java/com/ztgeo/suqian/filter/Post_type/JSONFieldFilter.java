@@ -13,6 +13,7 @@ import com.ztgeo.suqian.entity.ag_datashare.ApiJsonKeyFilter;
 import com.ztgeo.suqian.repository.agShare.ApiJsonKeyFilterRepository;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
+import io.micrometer.core.instrument.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,9 +67,9 @@ public class JSONFieldFilter extends ZuulFilter {
         String apiId = httpServletRequest.getHeader("api_id");
         String fromUser = httpServletRequest.getHeader("from_user");
 
-//        InputStream stream = requestContext.getResponseDataStream();
-//        String body = IOUtils.toString(stream);
-        String body = requestContext.getResponseBody();
+        InputStream stream = requestContext.getResponseDataStream();
+        String body = IOUtils.toString(stream);
+        //String body = requestContext.getResponseBody();
         System.out.println(body);
         JSONObject jsonObject = JSON.parseObject(body);
         if (jsonObject.containsKey("data") && jsonObject.containsKey("sign")) {

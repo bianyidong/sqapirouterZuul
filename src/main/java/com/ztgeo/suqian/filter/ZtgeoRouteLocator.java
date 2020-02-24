@@ -82,6 +82,7 @@ public class ZtgeoRouteLocator extends SimpleRouteLocator implements Refreshable
                 logger.error("=============加载路由出错==============", e);
             }
             routes.put(zuulRoute.getPath(), zuulRoute);
+//            routes.put(zuulRoute.getServiceId(), zuulRoute);
         }
         return routes;
     }

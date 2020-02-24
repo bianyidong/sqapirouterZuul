@@ -6,6 +6,8 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
+import com.ztgeo.suqian.common.GlobalConstants;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalSharedConfig;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
@@ -18,9 +20,11 @@ import io.micrometer.core.instrument.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -30,6 +34,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,16 +44,19 @@ import java.util.concurrent.TimeUnit;
 public class XzProReqFilter extends ZuulFilter {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Resource
-    private ApiUserFilterRepository apiUserFilterRepository;
-    @Resource
-    private ApiNotionalSharedConfigRepository apiNotionalSharedConfigRepository;
-    @Resource
-    private ApiBaseInfoRepository apiBaseInfoRepository;
+    private String api_id;
+   @Resource
+   private AGShareDao agShareDao;
     @Autowired
     private StringRedisTemplate redisTemplate;
-
+    @Value(value = "${xu.xzqdm}")
+    private String xzqdm;
+    @Value(value = "${xu.ip}")
+    private String ip;
+    @Value(value = "${xu.deptName}")
+    private String deptName;
+    @Value(value = "${xu.userName}")
+    private String userName;
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;
@@ -61,15 +69,14 @@ public class XzProReqFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        String className = this.getClass().getSimpleName();
-        RequestContext requestContext = RequestContext.getCurrentContext();
-        HttpServletRequest httpServletRequest = requestContext.getRequest();
-        String api_id = httpServletRequest.getHeader("api_id");
-        int useCount = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);
-
-        if (useCount == 0) {
-            return false;
-        } else {
+      String className = this.getClass().getSimpleName();
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
+        api_id=request.getHeader("api_id");
+        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
+        if (count>0){
+            return true;
+        }else {
             return false;
         }
     }
@@ -77,73 +84,52 @@ public class XzProReqFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
 
-        log.info("-------------开始---进入徐州转发转发请求过滤器-------------");
+        log.info("-------------开始---进入徐州转发请求过滤器-------------");
         RequestContext requestContext = RequestContext.getCurrentContext();
         try {
-            HttpServletRequest httpServletRequest = requestContext.getRequest();
-            log.info("请求为formdata");
-            Map<String,String> toBeJiamiMap = new HashMap<>();
-            Map<String,String[]> requestMap = httpServletRequest.getParameterMap();
-            System.out.println("ce"+requestMap);
-            for(Map.Entry<String, String[]> entry : requestMap.entrySet()){
-                String mapKey = entry.getKey();
-                String mapValue = StringArray2String(entry.getValue());
-                toBeJiamiMap.put(mapKey,mapValue);
+            HttpServletRequest request = requestContext.getRequest();
+            InputStream in = request.getInputStream();
+            String requestBody = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
+            String api_id = request.getHeader("api_id");
+            ApiBaseInfo apiBaseInfo = agShareDao.findApiBaseInfosByApiIdEquals(api_id).get(0);
+            String url = apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath();
+            log.info("根据api_id：" + api_id + "获取到的转发地址：" + url);
+            String redisKey = "token:" + api_id;
+            String currentDays = new SimpleDateFormat("yyyyMMdd").format(new Date());
+
+            JSONObject setResqJson =JSONObject.parseObject(requestBody);
+            JSONObject getHeadJson = setResqJson.getJSONObject("head");
+            if(StringUtils.isEmpty(getHeadJson.get("cxqqdh"))){
+                String configKey = currentDays + ":" + xzqdm;
+                int xuHao = getXuHao(configKey);
+                String cxqqdh = currentDays + xzqdm + String.format("%06d", xuHao);
+                getHeadJson.put("cxqqdh",cxqqdh);
             }
-            log.info("待加密map<toBeJiamiMap>：" + toBeJiamiMap);
+            getHeadJson.put("xzqdm",xzqdm);
+            getHeadJson.put("token", getProviceToken(redisKey));
+            getHeadJson.put("deptName",deptName);
+            getHeadJson.put("userName",userName);
+            getHeadJson.put("ip",ip);
+            System.out.println("22"+getHeadJson);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("gxData", setResqJson.toJSONString());
+            log.info("组织好的请求报文"+map);
+            String result=null;
+            result = HttpClientUtil.httpPostRequest(url, map);
+if (!StringUtils.isEmpty(result)){
+    requestContext.set(GlobalConstants.ISSUCCESS,"success");
+}else {
+    requestContext.set(GlobalConstants.ISSUCCESS,"false");
+}
+            requestContext.setResponseBody(result);
+            requestContext.setSendZuulResponse(false);
 
-
-            // 一定要get一下,下面这行代码才能取到值... [注1]
-            // httpServletRequest.getParameterMap();
-            Map<String, List<String>> requestQueryParams = requestContext.getRequestQueryParams();
-
-            if (requestQueryParams==null) {
-                requestQueryParams=new HashMap<>();
-            }
-
-            for(Map.Entry<String, String> entry : toBeJiamiMap.entrySet()){
-                requestQueryParams.put(entry.getKey(),String2List(entry.getValue()));
-            }
-
-            log.info("待转发map<requestQueryParams>：" + requestQueryParams);
-//
-//         //String head= String.valueOf(requestMap.get("gxData"));
-//            //String gxData=  httpServletRequest.getParameter("gxData");
-//            String api_id = httpServletRequest.getHeader("api_id");
-//            Map<String,String[]> requestMap = httpServletRequest.getParameterMap();
-//            Map<String,String> toBeJiamiMap = new HashMap<>();
-//            String redisKey = "token:" + api_id;
-//            //JSONObject setTokenJson=JSONObject.parseObject(gxData);
-//            //toBeJiamiMap.put("token",getProviceToken(redisKey));
-//            for(Map.Entry<String, String[]> entry : requestMap.entrySet()){
-//                String mapKey = entry.getKey();
-//                String mapValue = StringArray2String(entry.getValue());
-//                JSONObject jsonObject=JSONObject.parseObject(mapValue);
-//                JSONObject headJson=jsonObject.getJSONObject("head");
-//                headJson.put("token",getProviceToken(redisKey));
-//                String jsonString=jsonObject.toJSONString();
-//                toBeJiamiMap.put(mapKey,jsonString);
-//            }
-//            log.info("待转发map<toBeJiamiMap>：" + toBeJiamiMap);
-//            // 一定要get一下,下面这行代码才能取到值... [注1]
-//            // httpServletRequest.getParameterMap();
-//            Map<String, List<String>> requestQueryParams = requestContext.getRequestQueryParams();
-//
-//            if (requestQueryParams==null) {
-//                requestQueryParams=new HashMap<>();
-//            }
-//
-//            for(Map.Entry<String, String> entry : toBeJiamiMap.entrySet()){
-//                requestQueryParams.put(entry.getKey(),String2List(entry.getValue()));
-//            }
-//
-//            log.info("已加签，待转发map<requestQueryParams>：" + requestQueryParams);
-            //requestContext.setRequestQueryParams(requestQueryParams);
+           // log.info("待转发map<requestQueryParams>：" + requestQueryParams);
         }catch (Exception e) {
 
-            log.info("111", e);
-            log.info("-------------结束---111-------------");
-            throw new RuntimeException("30012-11111");
+            log.info("各级接口转发请求过滤器异常", e);
+            log.info("-------------结束---各级接口转发请求过滤器异常-------------");
+            throw new RuntimeException("30012-各级接口转发请求过滤器异常");
         }
         return null;
 
@@ -194,19 +180,17 @@ public class XzProReqFilter extends ZuulFilter {
         }
     }
 
-    private String StringArray2String(String[] strs){
-
-        StringBuffer str = new StringBuffer();
-        for (String s : strs) {
-            str.append(s);
+    // 序号获取与配置
+    private synchronized int getXuHao(String configKey) {
+        boolean totalIsHasKey = redisTemplate.hasKey(configKey);
+        if (!totalIsHasKey) {
+            redisTemplate.opsForValue().set(configKey, "1");
+            redisTemplate.expire(configKey, 2, TimeUnit.DAYS);
+            return 1;
+        } else {
+            int xuhao = Integer.valueOf(redisTemplate.opsForValue().get(configKey)) + 1;
+            redisTemplate.opsForValue().set(configKey, String.valueOf(xuhao));
+            return xuhao;
         }
-
-        return str.toString();
-    }
-
-    private List<String> String2List(String str){
-        List<String> listTmp = new ArrayList<>();
-        listTmp.add(str);
-        return listTmp;
     }
 }

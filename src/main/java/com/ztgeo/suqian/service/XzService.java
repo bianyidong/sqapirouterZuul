@@ -3,24 +3,28 @@ package com.ztgeo.suqian.service;
 import com.alibaba.fastjson.JSONObject;
 import com.isoftstone.sign.SignGeneration;
 import com.ztgeo.suqian.dao.AGLogDao;
+import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.ApiCitySharedConfig;
+import com.ztgeo.suqian.entity.ag_log.ApiAccessRecord;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiCitySharedConfigRepository;
 import com.ztgeo.suqian.repository.agShare.BaseUserRepository;
 import com.ztgeo.suqian.utils.HttpClientUtil;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
-import com.ztgeo.suqian.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,18 +34,14 @@ import java.util.concurrent.TimeUnit;
 public class XzService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
-    @Resource
-    private ApiCitySharedConfigRepository apiCitySharedConfigRepository;
-    @Resource
-    private ApiBaseInfoRepository apiBaseInfoRepository;
-    @Resource
-    private BaseUserRepository baseUserRepository;
+
     @Autowired
     private StringRedisTemplate redisTemplate;
     @Resource
     private AGLogDao agLogDao;
 
-    private String UserFilter = "";
+    @Resource
+    private AGShareDao agShareDao;
 
     @Value(value = "${xu.xzqdm}")
     private String xzqdm;
@@ -52,35 +52,64 @@ public class XzService {
     @Value(value = "${xu.userName}")
     private String userName;
 
-    public String Xzservice(String param,String api_id) {
+    public String Xzservice(String param,String api_id,String userid,String id,String requesturl) {
         String result = "";
         try {
-            ApiBaseInfo apiBaseInfo = apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(api_id).get(0);
+            ApiBaseInfo apiBaseInfo = agShareDao.findApiBaseInfosByApiIdEquals(api_id).get(0);
 
             String url = apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath();
             log.info("根据api_id：" + api_id + "获取到的转发地址：" + url);
             String redisKey = "token:" + api_id;
             String currentDays = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            String configKey = currentDays + ":" + xzqdm;
-            int xuHao = getXuHao(configKey);
-            String cxqqdh = currentDays + xzqdm + String.format("%06d", xuHao);
+
             JSONObject setResqJson =JSONObject.parseObject(param);
             JSONObject getHeadJson = setResqJson.getJSONObject("head");
+            if(StringUtils.isEmpty(getHeadJson.get("cxqqdh"))){
+                String configKey = currentDays + ":" + xzqdm;
+                int xuHao = getXuHao(configKey);
+                String cxqqdh = currentDays + xzqdm + String.format("%06d", xuHao);
+                getHeadJson.put("cxqqdh",cxqqdh);
+            }
             getHeadJson.put("xzqdm",xzqdm);
             getHeadJson.put("token", getProviceToken(redisKey));
             getHeadJson.put("deptName",deptName);
             getHeadJson.put("userName",userName);
-            getHeadJson.put("cxqqdh",cxqqdh);
             getHeadJson.put("ip",ip);
-
+            System.out.println("22"+getHeadJson);
             Map<String, String> map = new HashMap<String, String>();
             map.put("gxData", setResqJson.toJSONString());
             log.info("组织好的请求报文"+map);
             result = HttpClientUtil.httpPostRequest(url, map);
-        } catch (IOException e) {
+            LocalDateTime localTime = LocalDateTime.now();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dateTimeFormatterYmd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String currentTime = dateTimeFormatter.format(localTime);
+            String currentymd = dateTimeFormatterYmd.format(localTime);
+            ApiAccessRecord apiAccessRecord = new ApiAccessRecord();
+            apiAccessRecord.setId(id);
+            apiAccessRecord.setApiId(api_id);
+            apiAccessRecord.setFromUser(userid);
+            apiAccessRecord.setUserName(userName);
+            apiAccessRecord.setApiName(apiBaseInfo.getApiName());
+            apiAccessRecord.setApiUrl(apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath());
+            //apiAccessRecord.setFilterUser(UserFilter);
+            apiAccessRecord.setType("post");
+            apiAccessRecord.setAccessClientIp(requesturl);
+            apiAccessRecord.setUri(requesturl);
+            apiAccessRecord.setYearMonthDay(currentymd);
+            apiAccessRecord.setAccessTime(currentTime);
+            apiAccessRecord.setRequestData(param);
+            apiAccessRecord.setResponseData(result);
+            apiAccessRecord.setApiOwnerId(apiBaseInfo.getApiOwnerId());
+            apiAccessRecord.setStatus("0");
+            agLogDao.saveApiAccessRecord(apiAccessRecord);
+            log.info("记录日志完成");
+      }
+        catch (IOException e) {
             log.info("省级数据共享交换平台接口异常", e);
             throw new RuntimeException("省级数据共享交换平台接口异常");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.info("省级数据共享交换平台接口异常", e);
             throw new RuntimeException("省级数据共享交换平台接口异常");
         }
@@ -95,7 +124,6 @@ public class XzService {
             // 不存在
             if (!totalIsHasKey) {
                 log.info("redis中不存在TOKEN信息，需要重新获取！");
-
                 String token = null;
                 String tokenUrl = "http://10.0.0.6:8090/realestate-supervise-exchange/api/v1/bdc/token";
                 JSONObject tokenHeardJson = new JSONObject();

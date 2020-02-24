@@ -50,12 +50,7 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        RequestContext requestContext = RequestContext.getCurrentContext();
-        if (!requestContext.sendZuulResponse()){
-            return false;
-        }else {
-            return true;
-        }
+        return true;
     }
 
     @Override
@@ -64,39 +59,55 @@ public class ResponseReceiveBodyFilter extends ZuulFilter {
         try {
             RequestContext ctx = RequestContext.getCurrentContext();
             String userID;
-            String requserID= ctx.getRequest().getHeader("from_user");
+            String requserID = ctx.getRequest().getHeader("from_user");
             HttpServletResponse response = ctx.getResponse();
-            if(StringUtils.isEmpty(requserID)){
+            if (StringUtils.isEmpty(requserID)) {
                 String ctxFromUser = ctx.get("from_user").toString();
-                if(StringUtils.isEmpty(ctxFromUser)){
+                if (StringUtils.isEmpty(ctxFromUser)) {
                     throw new ZtgeoBizZuulException(CodeMsg.GETNULL_ERROR);
-                }else{
+                } else {
                     userID = ctxFromUser;
-                    ctx.addZuulResponseHeader("Content-Type","text/xml");
+                    ctx.addZuulResponseHeader("Content-Type", "text/xml");
                 }
-            }else{
+            } else {
                 userID = requserID;
             }
             //获取记录主键ID(来自routing过滤器保存的上下文)
             Object recordID = ctx.get(GlobalConstants.RECORD_PRIMARY_KEY);
             Object accessClientIp = ctx.get(GlobalConstants.ACCESS_IP_KEY);
+           Object issuccess= ctx.get(GlobalConstants.ISSUCCESS);
             if (Objects.equals(null, accessClientIp) || Objects.equals(null, recordID))
                 throw new ZtgeoBizZuulException(CodeMsg.FAIL, "访问者IP或记录ID未获取到");
             String rspBody = ctx.getResponseBody();
             log.info("接收到返回的数据{}", rspBody);
-            int statuscode=ctx.getResponseStatusCode();
-            if (statuscode==200){
-                agLogDao.updateResponsedateById(rspBody, "0",recordID.toString());
-                response.addHeader("gx_resp_code","10000");
-                response.addHeader("gx_resp_logid",recordID.toString());
-                response.addHeader("gx_resp_msg", URLEncoder.encode("转发成功","UTF-8"));
-            }else {
-                agLogDao.updateResponsedateById(rspBody, "1",recordID.toString());
+            int statuscode = ctx.getResponseStatusCode();
+            if (issuccess==null){
+                if (statuscode == 200) {
+                    agLogDao.updateResponsedateById(rspBody, "0", recordID.toString());
+                    response.addHeader("gx_resp_code", "10000");
+                    response.addHeader("gx_resp_logid", recordID.toString());
+                    response.addHeader("gx_resp_msg", URLEncoder.encode("转发成功", "UTF-8"));
+                } else {
+                    agLogDao.updateResponsedateById(rspBody, "1", recordID.toString());
+                }
+            }
+            else if (issuccess.equals("success")){
+                agLogDao.updateResponsedateById(rspBody, "0", recordID.toString());
+                response.addHeader("gx_resp_code", "10000");
+                response.addHeader("gx_resp_logid", recordID.toString());
+                response.addHeader("gx_resp_msg", URLEncoder.encode("转发成功", "UTF-8"));
+            }else if (issuccess.equals("false")){
+                response.addHeader("gx_resp_code", "30012");
+                response.addHeader("gx_resp_logid", recordID.toString());
+                response.addHeader("gx_resp_msg", URLEncoder.encode("各级接口转发请求过滤器异常", "UTF-8"));
+            }
+            else {
+
             }
             log.info("记录完成");
             return null;
-        }catch (Exception s) {
-            log.info("20027-post日志过滤器内部异常",s);
+        } catch (Exception s) {
+            log.info("20027-post日志过滤器内部异常", s);
             throw new RuntimeException("20027-post日志过滤器内部异常");
         }
     }

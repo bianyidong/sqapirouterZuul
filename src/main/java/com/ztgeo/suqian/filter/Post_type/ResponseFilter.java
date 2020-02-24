@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -38,17 +39,12 @@ public class ResponseFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 20;
+        return 97;
     }
 
     @Override
     public boolean shouldFilter() {
-        RequestContext ctx = RequestContext.getCurrentContext();
-
-        if (!ctx.sendZuulResponse()){
-            return false;
-        }else {
-        return true;}
+        return true;
     }
 
     @Override
@@ -71,7 +67,9 @@ public class ResponseFilter extends ZuulFilter {
 //                log.info("请求为text/xml，返回日志不操作");
 //                return null;
 //            }
-            if (!Objects.equals(null, inputStream)&&Objects.equals(null, rspBody)) {
+            if (!Objects.equals(null, inputStream) && Objects.equals(null, rspBody)) {
+               // String body = StreamUtils.copyToString(inputStream, Charset.forName("UTF-8"));
+//                ctx.setResponseDataStream(new ByteArrayInputStream(body.getBytes()));
                 // 获取返回的body
                 ByteArrayOutputStream byteArrayOutputStream = StreamOperateUtils.cloneInputStreamToByteArray(inputStream);
                 inputStreamOld = new ByteArrayInputStream(byteArrayOutputStream.toByteArray()); // 原始流
@@ -79,7 +77,7 @@ public class ResponseFilter extends ZuulFilter {
                 inputStreamNew = inputStreamOld;
                 // 获取返回的body字符串
                 String responseBody = StreamUtils.copyToString(inputStreamOld, StandardCharsets.UTF_8);
-
+                log.info("post通用过滤器返回数据{}", responseBody);
                 if (Objects.equals(null, responseBody)) {
                     throw new ZtgeoBizZuulException(CodeMsg.FAIL, "post通用过滤器响应报文未获取到");
                 }
@@ -88,7 +86,7 @@ public class ResponseFilter extends ZuulFilter {
                 ctx.setResponseDataStream(inputStreamNew);
             } else if (!Objects.equals(null, rspBody)) {
                 ctx.setResponseBody(rspBody);
-                log.info("post通用过滤器入库完成{}",rspBody);
+                log.info("post通用过滤器入库完成{}", rspBody);
             } else {
                 //log.info("未接收到返回的任何数据,记录ID:{}", recordID);
                 log.info("未接收到返回的任何数据,记录ID:{}", "0000");
@@ -96,8 +94,8 @@ public class ResponseFilter extends ZuulFilter {
             }
 
             return null;
-        }catch (Exception s) {
-            log.info("10006-响应通用过滤器内部异常",s);
+        } catch (Exception s) {
+            log.info("10006-响应通用过滤器内部异常", s);
             throw new RuntimeException("10006-响应通用过滤器内部异常");
         } finally {
             ResponseSafeToSignFilter.getFindlly(inputStream, inputStreamOld, inputStreamNew);

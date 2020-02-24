@@ -16,6 +16,7 @@ public class GlobalConstants {
     public static final String ACCESS_IP_KEY = "accessIP";
     // 发送的数据
     public static final String SENDBODY = "";
+    public static final  String ISSUCCESS="";
 
 
 }

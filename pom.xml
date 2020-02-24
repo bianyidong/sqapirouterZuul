@@ -161,7 +161,8 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
+
+        <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-autoconfigure</artifactId>-->
 <!--            <version>1.5.1.RELEASE</version>-->
