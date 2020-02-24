@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5b8d00e6-053d-4563-8162-e6eebb52fb09" name="Default" comment="">
+    <list default="true" id="5b8d00e6-053d-4563-8162-e6eebb52fb09" name="Default" comment="徐州省级过滤器">
       <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" afterDir="false" />
@@ -461,14 +461,30 @@
       <workItem from="1579067032014" duration="24705000" />
       <workItem from="1579395901379" duration="8519000" />
       <workItem from="1579486842886" duration="12462000" />
-      <workItem from="1582507553358" duration="1901000" />
+      <workItem from="1582507553358" duration="2174000" />
     </task>
+    <task id="LOCAL-00001" summary="徐州省级过滤器">
+      <created>1582521295416</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1582521295416</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="徐州省级过滤器" />
+    <option name="LAST_COMMIT_MESSAGE" value="徐州省级过滤器" />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="375" y="110" key="CommitChangelistDialog2" timestamp="1582521294029">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="375" y="110" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1582521294029" />
     <state width="521" height="466" key="DebuggerActiveHint" timestamp="1579502696240">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
@@ -551,6 +567,10 @@
     <state width="1860" height="329" key="GridCell.Tab.2.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1579159600673" />
     <state width="1877" height="328" key="GridCell.Tab.2.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1579502610775" />
     <state width="1877" height="141" key="GridCell.Tab.2.right/0.0.1920.1040@0.0.1920.1040" timestamp="1579595028969" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1582521301870">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1582521301870" />
     <state width="970" height="530" key="XDebugger.FullValuePopup" timestamp="1579487098427">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
