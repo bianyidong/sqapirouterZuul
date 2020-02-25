@@ -8,20 +8,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "api_notionalshared_config1")//宿迁国家级过滤器配置更改表名测试api_notionalshared_config
-public class ApiNotionalSharedConfig implements Serializable {
+@Entity(name = "api_notionalshared_config")//徐州国家级表配置的
+public class ApiNotionalConfig implements Serializable {
     @Id
     @Column(name = "userid")
     private String userid;
-    @Column(name = "id")
-    private String id;
-    @Column(name = "token")
-    private String token;
+    @Column(name = "user_name")
+    private String userName;
+    @Column(name = "ip")
+    private String ip;
     @Column(name = "dept_name")
     private String deptName;
     @Column(name = "qxdm")

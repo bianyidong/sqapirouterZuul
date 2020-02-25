@@ -9,6 +9,7 @@ import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
+import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalConfig;
 import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalSharedConfig;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
@@ -45,18 +46,19 @@ public class XzProReqFilter extends ZuulFilter {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
     private String api_id;
-   @Resource
-   private AGShareDao agShareDao;
+    @Resource
+    private AGShareDao agShareDao;
     @Autowired
     private StringRedisTemplate redisTemplate;
-    @Value(value = "${xu.xzqdm}")
-    private String xzqdm;
-    @Value(value = "${xu.ip}")
-    private String ip;
-    @Value(value = "${xu.deptName}")
-    private String deptName;
-    @Value(value = "${xu.userName}")
-    private String userName;
+
+    //    @Value(value = "${xu.xzqdm}")
+//    private String xzqdm;
+//    @Value(value = "${xu.ip}")
+//    private String ip;
+//    @Value(value = "${xu.deptName}")
+//    private String deptName;
+//    @Value(value = "${xu.userName}")
+//    private String userName;
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;
@@ -69,14 +71,14 @@ public class XzProReqFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-      String className = this.getClass().getSimpleName();
+        String className = this.getClass().getSimpleName();
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        api_id=request.getHeader("api_id");
-        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
-        if (count>0){
+        api_id = request.getHeader("api_id");
+        int count = agShareDao.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);
+        if (count > 0) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -96,36 +98,40 @@ public class XzProReqFilter extends ZuulFilter {
             log.info("根据api_id：" + api_id + "获取到的转发地址：" + url);
             String redisKey = "token:" + api_id;
             String currentDays = new SimpleDateFormat("yyyyMMdd").format(new Date());
-
-            JSONObject setResqJson =JSONObject.parseObject(requestBody);
+            ApiNotionalConfig apiNotionalConfig = agShareDao.findApiNotionalSharedConfigsByapiIdEquals(api_id);
+            String xzqdm = apiNotionalConfig.getQxdm();
+            String deptName = apiNotionalConfig.getDeptName();
+            String userName = apiNotionalConfig.getUserName();
+            String ip = apiNotionalConfig.getIp();
+            JSONObject setResqJson = JSONObject.parseObject(requestBody);
             JSONObject getHeadJson = setResqJson.getJSONObject("head");
-            if(StringUtils.isEmpty(getHeadJson.get("cxqqdh"))){
+            if (StringUtils.isEmpty(getHeadJson.get("cxqqdh"))) {
                 String configKey = currentDays + ":" + xzqdm;
                 int xuHao = getXuHao(configKey);
                 String cxqqdh = currentDays + xzqdm + String.format("%06d", xuHao);
-                getHeadJson.put("cxqqdh",cxqqdh);
+                getHeadJson.put("cxqqdh", cxqqdh);
             }
-            getHeadJson.put("xzqdm",xzqdm);
+            getHeadJson.put("xzqdm", xzqdm);
             getHeadJson.put("token", getProviceToken(redisKey));
-            getHeadJson.put("deptName",deptName);
-            getHeadJson.put("userName",userName);
-            getHeadJson.put("ip",ip);
-            System.out.println("22"+getHeadJson);
+            getHeadJson.put("deptName", deptName);
+            getHeadJson.put("userName", userName);
+            getHeadJson.put("ip", ip);
+            System.out.println("22" + getHeadJson);
             Map<String, String> map = new HashMap<String, String>();
             map.put("gxData", setResqJson.toJSONString());
-            log.info("组织好的请求报文"+map);
-            String result=null;
+            log.info("组织好的请求报文" + map);
+            String result = null;
             result = HttpClientUtil.httpPostRequest(url, map);
-if (!StringUtils.isEmpty(result)){
-    requestContext.set(GlobalConstants.ISSUCCESS,"success");
-}else {
-    requestContext.set(GlobalConstants.ISSUCCESS,"false");
-}
+            if (!StringUtils.isEmpty(result)) {
+                requestContext.set(GlobalConstants.ISSUCCESS, "success");
+            } else {
+                requestContext.set(GlobalConstants.ISSUCCESS, "false");
+            }
             requestContext.setResponseBody(result);
             requestContext.setSendZuulResponse(false);
 
-           // log.info("待转发map<requestQueryParams>：" + requestQueryParams);
-        }catch (Exception e) {
+            // log.info("待转发map<requestQueryParams>：" + requestQueryParams);
+        } catch (Exception e) {
 
             log.info("各级接口转发请求过滤器异常", e);
             log.info("-------------结束---各级接口转发请求过滤器异常-------------");
@@ -154,14 +160,14 @@ if (!StringUtils.isEmpty(result)){
                 dataJson.put("password", "6f715e67548d147c17cd408fe4201cc1");
                 JSONObject tokenJson = new JSONObject();
                 tokenJson.put("head", tokenHeardJson);
-                tokenJson.put("data",dataJson);
+                tokenJson.put("data", dataJson);
                 Map<String, String> map = new HashMap<>();
-                map.put("gxData",tokenJson.toJSONString());
+                map.put("gxData", tokenJson.toJSONString());
 
                 token = HttpUtilsAll.post(tokenUrl, map).body();
                 JSONObject tokenResponseJson = JSONObject.parseObject(token);
                 JSONObject accessData = tokenResponseJson.getJSONObject("data");
-                String accessToken=accessData.getString("token");
+                String accessToken = accessData.getString("token");
 
                 redisTemplate.opsForValue().set(configKey, accessToken);
                 redisTemplate.expire(configKey, 1600, TimeUnit.SECONDS);
