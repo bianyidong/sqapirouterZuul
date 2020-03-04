@@ -146,7 +146,7 @@ public class HttpClientUtil {
             // response.getStatusLine().getStatusCode();
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                // long len = entity.getContentLength();// -1 琛ㄧず闀垮害鏈煡
+                // long len = entity.getContentLength();// -1
                 String result = EntityUtils.toString(entity);
                 response.close();
                 // httpClient.close();

@@ -51,14 +51,15 @@ public class XzProReqFilter extends ZuulFilter {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    //    @Value(value = "${xu.xzqdm}")
-//    private String xzqdm;
+        @Value(value = "${xu.xzqdm}")
+    private String xzqdm;
 //    @Value(value = "${xu.ip}")
 //    private String ip;
-//    @Value(value = "${xu.deptName}")
-//    private String deptName;
-//    @Value(value = "${xu.userName}")
-//    private String userName;
+
+    @Value(value = "${xu.username}")
+    private String username;
+    @Value(value = "${xu.password}")
+    private String password;
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;
@@ -154,10 +155,10 @@ public class XzProReqFilter extends ZuulFilter {
                 String tokenUrl = "http://10.0.0.6:8090/realestate-supervise-exchange/api/v1/bdc/token";
                 JSONObject tokenHeardJson = new JSONObject();
 
-                tokenHeardJson.put("xzqdm", "320300");
+                tokenHeardJson.put("xzqdm", xzqdm);
                 JSONObject dataJson = new JSONObject();
-                dataJson.put("username", "gx320300");
-                dataJson.put("password", "6f715e67548d147c17cd408fe4201cc1");
+                dataJson.put("username", username);
+                dataJson.put("password", password);
                 JSONObject tokenJson = new JSONObject();
                 tokenJson.put("head", tokenHeardJson);
                 tokenJson.put("data", dataJson);
@@ -168,7 +169,7 @@ public class XzProReqFilter extends ZuulFilter {
                 JSONObject tokenResponseJson = JSONObject.parseObject(token);
                 JSONObject accessData = tokenResponseJson.getJSONObject("data");
                 String accessToken = accessData.getString("token");
-
+                //因为token接口设置的半个小时过期，redis缓存过期时间少于半个小时
                 redisTemplate.opsForValue().set(configKey, accessToken);
                 redisTemplate.expire(configKey, 1600, TimeUnit.SECONDS);
                 log.info("获取新TOKEN：" + accessToken + "差设置到redis中，redis过期时间为1600秒");

@@ -87,7 +87,7 @@ public class NoticeController {
                 setjsonObject.put("Sign_pub_key",userKeyInfo.getSignPubKey());
                 setjsonObject.put("Sign_pt_secret_key",userKeyInfo.getSignPtSecretKey());
                 setjsonObject.put("Sign_pt_pub_key",userKeyInfo.getSignPtPubKey());
-                //存入Redis
+                //暂时存入Redis
                 redis.set(USER_REDIS_SESSION +":"+userID, setjsonObject.toJSONString());
             }else {
                 JSONObject getjsonObject = JSONObject.parseObject(str);

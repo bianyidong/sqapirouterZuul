@@ -52,7 +52,6 @@ yxtokenpath: http://192.168.1.251:1104/public/oauth/token
 sqnankangkey: nankang
 xu:
   xzqdm: 320300
-  ip: 10.3.2.16
-  deptName: 徐州不动产登记服务中心
-  userName: 葛文超
+  username: gx320300
+  password: 6f715e67548d147c17cd408fe4201cc1
 nationPath: /realestate-supervise-exchange/api/v1/other-subject/query/apply

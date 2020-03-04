@@ -75,7 +75,6 @@ public class XzService {
             getHeadJson.put("deptName",deptName);
             getHeadJson.put("userName",userName);
             getHeadJson.put("ip",ip);
-            System.out.println("22"+getHeadJson);
             Map<String, String> map = new HashMap<String, String>();
             map.put("gxData", setResqJson.toJSONString());
             log.info("组织好的请求报文"+map);
@@ -92,7 +91,7 @@ public class XzService {
             apiAccessRecord.setUserName(userName);
             apiAccessRecord.setApiName(apiBaseInfo.getApiName());
             apiAccessRecord.setApiUrl(apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath());
-            //apiAccessRecord.setFilterUser(UserFilter);
+            //apiAccessRecord.setFilterUser(UserFilter);//使用的过滤器名称
             apiAccessRecord.setType("post");
             apiAccessRecord.setAccessClientIp(requesturl);
             apiAccessRecord.setUri(requesturl);

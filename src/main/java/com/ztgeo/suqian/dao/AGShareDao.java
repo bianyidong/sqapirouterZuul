@@ -59,6 +59,7 @@ public class AGShareDao {
     public ApiBaseInfo queryApiBaseInfoByApiId(String ApiId){
         return apiBaseInfoRepository.queryApiBaseInfoByApiId(ApiId);
     }
+
     //查询是否配置当前过滤器
     @DataSource
     public int countApiUserFiltersByFilterBcEqualsAndApiIdEquals(String filterBC,String apiId){
