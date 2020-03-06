@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5b8d00e6-053d-4563-8162-e6eebb52fb09" name="Default" comment="徐州国家级过滤器测试更改">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/dao/AGShareDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/dao/AGShareDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/XzProReqFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/XzProReqFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/rest/NoticeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/rest/NoticeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/XzService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/XzService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/utils/HttpClientUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/utils/HttpClientUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +142,9 @@
       <workItem from="1582682302087" duration="1982000" />
       <workItem from="1582765175567" duration="4593000" />
       <workItem from="1583196544312" duration="6855000" />
-      <workItem from="1583283675524" duration="17363000" />
+      <workItem from="1583283675524" duration="18232000" />
+      <workItem from="1583370312256" duration="7988000" />
+      <workItem from="1583456768325" duration="7446000" />
     </task>
     <task id="LOCAL-00001" summary="徐州省级过滤器">
       <created>1582521295416</created>
@@ -171,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582614732899</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="徐州国家级过滤器测试更改">
+      <created>1583313403723</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1583313403723</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,21 +194,21 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="739" y="404" width="441" height="241" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1582620846051" />
-    <state x="375" y="110" key="CommitChangelistDialog2" timestamp="1582614732038">
+    <state x="375" y="110" key="CommitChangelistDialog2" timestamp="1583313402436">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="375" y="110" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1582614732038" />
+    <state x="375" y="110" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1583313402436" />
     <state width="521" height="466" key="DebuggerActiveHint" timestamp="1579502696240">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state width="521" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1579159143287" />
     <state width="521" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1579502696240" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1583300823483">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1583472762022">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1579163542684" />
     <state x="2660" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1579423319629" />
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1583300823483" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1583472762022" />
     <state width="1877" height="245" key="GridCell.Tab.0.bottom" timestamp="1582537057264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -278,10 +281,10 @@
     <state width="1860" height="329" key="GridCell.Tab.2.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1579159600673" />
     <state width="1877" height="328" key="GridCell.Tab.2.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1579502610775" />
     <state width="1877" height="245" key="GridCell.Tab.2.right/0.0.1920.1040@0.0.1920.1040" timestamp="1582537057264" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1582614735695">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1583313405518">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1582614735695" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1583313405518" />
     <state width="970" height="530" key="XDebugger.FullValuePopup" timestamp="1579487098427">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
