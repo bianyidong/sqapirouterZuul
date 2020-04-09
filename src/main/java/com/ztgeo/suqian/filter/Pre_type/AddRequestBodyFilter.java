@@ -64,6 +64,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
             // 获取request
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
+            String username=request.getParameter("USERNAME");
             String uri = request.getRequestURI();
             String url = request.getRequestURL().toString();
             String type = request.getContentType();
@@ -79,6 +80,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
             String apiID=null;
             String userID = null;
             String reqapiID = request.getHeader("api_id");
+            log.info("请求的api_id"+reqapiID);
             String requserID = request.getHeader("from_user");
             if (StringUtils.isEmpty(reqapiID) || StringUtils.isEmpty(requserID)) {
                 log.info("20012-请求日志过滤器未获取到from_user或者api_id");
@@ -157,7 +159,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return -98;
+        return -99;
     }
 
     @Override

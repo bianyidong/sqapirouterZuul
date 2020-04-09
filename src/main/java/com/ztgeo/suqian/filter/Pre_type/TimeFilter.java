@@ -54,6 +54,7 @@ public class TimeFilter extends ZuulFilter {
 
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
+        String username=httpServletRequest.getParameter("USERNAME");
         api_id = httpServletRequest.getHeader("api_id");
 
         int count = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className, api_id);

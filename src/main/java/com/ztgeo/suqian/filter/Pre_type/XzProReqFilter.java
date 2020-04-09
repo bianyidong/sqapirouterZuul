@@ -10,7 +10,6 @@ import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalConfig;
-import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalSharedConfig;
 import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
@@ -32,6 +31,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
@@ -60,6 +60,8 @@ public class XzProReqFilter extends ZuulFilter {
     private String username;
     @Value(value = "${xu.password}")
     private String password;
+    @Value(value = "${sttokenUrl}")
+    private String getTokenUrl;
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;
@@ -117,12 +119,14 @@ public class XzProReqFilter extends ZuulFilter {
             getHeadJson.put("deptName", deptName);
             getHeadJson.put("userName", userName);
             getHeadJson.put("ip", ip);
-            System.out.println("22" + getHeadJson);
             Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> paramMap=new HashMap<String, String>();
+            Map<String, File> fileMap=new HashMap<>();
             map.put("gxData", setResqJson.toJSONString());
             log.info("组织好的请求报文" + map);
             String result = null;
-            result = HttpClientUtil.httpPostRequest(url, map);
+//            result = HttpClientUtil.httpPostRequest(url, map);
+            result = HttpUtilsAll.post(url,null, map, null).body();
             if (!StringUtils.isEmpty(result)) {
                 requestContext.set(GlobalConstants.ISSUCCESS, "success");
             } else {
@@ -130,10 +134,7 @@ public class XzProReqFilter extends ZuulFilter {
             }
             requestContext.setResponseBody(result);
             requestContext.setSendZuulResponse(false);
-
-            // log.info("待转发map<requestQueryParams>：" + requestQueryParams);
         } catch (Exception e) {
-
             log.info("各级接口转发请求过滤器异常", e);
             log.info("-------------结束---各级接口转发请求过滤器异常-------------");
             throw new RuntimeException("30012-各级接口转发请求过滤器异常");
@@ -152,7 +153,7 @@ public class XzProReqFilter extends ZuulFilter {
                 log.info("redis中不存在TOKEN信息，需要重新获取！");
 
                 String token = null;
-                String tokenUrl = "http://10.0.0.6:8090/realestate-supervise-exchange/api/v1/bdc/token";
+                String tokenUrl =getTokenUrl;
                 JSONObject tokenHeardJson = new JSONObject();
 
                 tokenHeardJson.put("xzqdm", xzqdm);

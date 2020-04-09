@@ -45,6 +45,10 @@ zuul:
     max-total-connections: 1000
     max-per-route-connections: 50
 customAttributes:
+  ftpIp: 127.0.0.1 # ftp Ip
+  ftpPort: 2121 # ftp端口号
+  ftpUsername: bian # FTP登录账号
+  ftpPassword: 123456 # FTP登录密码
   # 存储用户发送数据的数据库名
   #接口转发的数据库名
   httpName: "http_db"
@@ -54,4 +58,4 @@ xu:
   xzqdm: 320300
   username: gx320300
   password: 6f715e67548d147c17cd408fe4201cc1
-nationPath: /realestate-supervise-exchange/api/v1/other-subject/query/apply
+sttokenUrl: http://10.0.0.6:8090/realestate-supervise-exchange/api/v1/bdc/token

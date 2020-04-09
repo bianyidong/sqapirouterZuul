@@ -42,6 +42,7 @@ E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRo
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\common\ZtgeoBizZuulException.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\filter\dz\YXLTRespDZFilter.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\entity\ag_datashare\DzYixing.java
+E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\repository\agShare\ApiNotionalConfigRepository.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\utils\CommonResponseEntity.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\entity\ag_datashare\UserKeyInfo.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\utils\HttpClientUtil.java
@@ -79,6 +80,7 @@ E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRo
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\utils\HttpUtils.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\dao\AGShareDao.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\config\ZtgeoZuulConfig.java
+E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\entity\ag_datashare\ApiNotionalConfig.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\entity\ag_datashare\ApiChangeType.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\entity\ag_datashare\ApiUserMember.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\entity\ag_datashare\ApiTimeFilter.java
@@ -93,6 +95,7 @@ E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRo
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\service\RxdbService.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\rest\NoticeController.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\dao\AGLogDao.java
+E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\utils\FTPUtil.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\utils\HttpOperation.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\filter\Pre_type\SafefromDataFilter.java
 E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\rest\RouteController.java

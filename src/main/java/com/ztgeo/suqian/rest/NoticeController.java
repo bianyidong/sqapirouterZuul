@@ -48,7 +48,6 @@ import static com.ztgeo.suqian.common.GlobalConstants.USER_REDIS_SESSION;
 public class NoticeController {
     private static final Logger log = LoggerFactory.getLogger(NoticeController.class);
     private String Symmetric_pubkey;
-
     private String SignPubKey;
     @Resource
     private NoticeBaseInfoRepository noticeBaseInfoRepository;
@@ -70,52 +69,52 @@ public class NoticeController {
             String noticeCode = request.getHeader("api_id");
             RequestContext ctx = RequestContext.getCurrentContext();
             //2.获取body中的加密和加签数据并做解密
-            JSONObject jsonObject = JSON.parseObject(bodyStr);
-            String data = jsonObject.get("data").toString();
-            String sign = jsonObject.get("sign").toString();
-            if (StringUtils.isBlank(data) || StringUtils.isBlank(sign))
-                throw new ZtgeoBizZuulException(CodeMsg.PARAMS_ERROR, "未获取到通知数据或签名");
-            //获取redis中的key值
-            String str = redis.get(USER_REDIS_SESSION +":"+userID);
-            if (StringUtils.isBlank(str)){
-                UserKeyInfo userKeyInfo=userKeyInfoRepository.findByUserRealIdEquals(userID);
-                Symmetric_pubkey=userKeyInfo.getSymmetricPubkey();
-                SignPubKey=userKeyInfo.getSignPubKey();
-                JSONObject setjsonObject = new JSONObject();
-                setjsonObject.put("Symmetric_pubkey",userKeyInfo.getSymmetricPubkey());
-                setjsonObject.put("Sign_secret_key", userKeyInfo.getSignSecretKey());
-                setjsonObject.put("Sign_pub_key",userKeyInfo.getSignPubKey());
-                setjsonObject.put("Sign_pt_secret_key",userKeyInfo.getSignPtSecretKey());
-                setjsonObject.put("Sign_pt_pub_key",userKeyInfo.getSignPtPubKey());
-                //暂时存入Redis
-                redis.set(USER_REDIS_SESSION +":"+userID, setjsonObject.toJSONString());
-            }else {
-                JSONObject getjsonObject = JSONObject.parseObject(str);
-                Symmetric_pubkey=getjsonObject.getString("Symmetric_pubkey");
-                SignPubKey=getjsonObject.getString("Sign_pub_key");
-                if (StringUtils.isBlank(Symmetric_pubkey)){
-                    log.info("未查询到通知请求方密钥信息");
-                    throw new ZtgeoBizRuntimeException(CodeMsg.FAIL, "未查询到通知请求方密钥信息");
-                }
-            }
-            // 验证签名
-            boolean verifyResult = CryptographyOperation.signatureVerify(SignPubKey, data, sign);
-            if (Objects.equals(verifyResult, false)) {
-                log.info("通知请求方验签失败");
-                throw new ZtgeoBizRuntimeException(CodeMsg.SIGN_ERROR);
-            }
-            // 解密数据
-            String reqDecryptData = CryptographyOperation.aesDecrypt(Symmetric_pubkey, data);
+//            JSONObject jsonObject = JSON.parseObject(bodyStr);
+//            String data = jsonObject.get("data").toString();
+//            String sign = jsonObject.get("sign").toString();
+//            if (StringUtils.isBlank(data) || StringUtils.isBlank(sign))
+//                throw new ZtgeoBizZuulException(CodeMsg.PARAMS_ERROR, "未获取到通知数据或签名");
+//            //获取redis中的key值
+//            String str = redis.get(USER_REDIS_SESSION +":"+userID);
+//            if (StringUtils.isBlank(str)){
+//                UserKeyInfo userKeyInfo=userKeyInfoRepository.findByUserRealIdEquals(userID);
+//                Symmetric_pubkey=userKeyInfo.getSymmetricPubkey();
+//                SignPubKey=userKeyInfo.getSignPubKey();
+//                JSONObject setjsonObject = new JSONObject();
+//                setjsonObject.put("Symmetric_pubkey",userKeyInfo.getSymmetricPubkey());
+//                setjsonObject.put("Sign_secret_key", userKeyInfo.getSignSecretKey());
+//                setjsonObject.put("Sign_pub_key",userKeyInfo.getSignPubKey());
+//                setjsonObject.put("Sign_pt_secret_key",userKeyInfo.getSignPtSecretKey());
+//                setjsonObject.put("Sign_pt_pub_key",userKeyInfo.getSignPtPubKey());
+//                //暂时存入Redis
+//                redis.set(USER_REDIS_SESSION +":"+userID, setjsonObject.toJSONString());
+//            }else {
+//                JSONObject getjsonObject = JSONObject.parseObject(str);
+//                Symmetric_pubkey=getjsonObject.getString("Symmetric_pubkey");
+//                SignPubKey=getjsonObject.getString("Sign_pub_key");
+//                if (StringUtils.isBlank(Symmetric_pubkey)){
+//                    log.info("未查询到通知请求方密钥信息");
+//                    throw new ZtgeoBizRuntimeException(CodeMsg.FAIL, "未查询到通知请求方密钥信息");
+//                }
+//            }
+//            // 验证签名
+//            boolean verifyResult = CryptographyOperation.signatureVerify(SignPubKey, data, sign);
+//            if (Objects.equals(verifyResult, false)) {
+//                log.info("通知请求方验签失败");
+//                throw new ZtgeoBizRuntimeException(CodeMsg.SIGN_ERROR);
+//            }
+//            // 解密数据
+//            String reqDecryptData = CryptographyOperation.aesDecrypt(Symmetric_pubkey, data);
             // 查询待发送的http列表
             List<NoticeBaseInfo> urlList = noticeBaseInfoRepository.querySendUrl(userID, noticeCode);
             // 异步发送http请求
             for (int i = 0; i < urlList.size(); i++) {
                 //接收方真实ID
                 String receiverId = urlList.get(i).getUserRealId();
-                // 获取接收方机构的密钥
-                UserKeyInfo userKeyInfoReceive =userKeyInfoRepository.findByUserRealIdEquals(receiverId);
-                String receiveSignPtSecretKey = userKeyInfoReceive.getSignPtSecretKey();
-                String receiveAesKey = userKeyInfoReceive.getSymmetricPubkey();
+//                // 获取接收方机构的密钥
+//                UserKeyInfo userKeyInfoReceive =userKeyInfoRepository.findByUserRealIdEquals(receiverId);
+//                String receiveSignPtSecretKey = userKeyInfoReceive.getSignPtSecretKey();
+//                String receiveAesKey = userKeyInfoReceive.getSymmetricPubkey();
                 //发送地址
                 String url = urlList.get(i).getNoticePath();
                 //记录ID
@@ -128,23 +127,25 @@ public class NoticeController {
                 LocalDateTime localDateTime = LocalDateTime.now();
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String currentTime = dateTimeFormatter.format(localDateTime);
-                if (StringUtils.isBlank(receiveSignPtSecretKey) || StringUtils.isBlank(receiveAesKey))
-                    throw new ZtgeoBizRuntimeException(CodeMsg.FAIL, "未查询到要通知接收方密钥信息");
-                // 重新加密加签
-                String receiveEncryptData = CryptographyOperation.aesEncrypt(receiveAesKey, reqDecryptData);
-                String receiveSign = CryptographyOperation.generateSign(receiveSignPtSecretKey, receiveEncryptData);
-                //重新加载到requset中
-                jsonObject.put("data",receiveEncryptData);
-                jsonObject.put("sign",receiveSign);
-                String sendStr=jsonObject.toString();
+//                if (StringUtils.isBlank(receiveSignPtSecretKey) || StringUtils.isBlank(receiveAesKey))
+//                    throw new ZtgeoBizRuntimeException(CodeMsg.FAIL, "未查询到要通知接收方密钥信息");
+//                // 重新加密加签
+//                String receiveEncryptData = CryptographyOperation.aesEncrypt(receiveAesKey, reqDecryptData);
+//                String receiveSign = CryptographyOperation.generateSign(receiveSignPtSecretKey, receiveEncryptData);
+//                //重新加载到requset中
+//                jsonObject.put("data",receiveEncryptData);
+//                jsonObject.put("sign",receiveSign);
+//                String sendStr=jsonObject.toString();
 
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
                         .connectTimeout(10, TimeUnit.SECONDS)
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(20, TimeUnit.SECONDS)
                         .build();
+//                okhttp3.RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
+//                        , sendStr);
                 okhttp3.RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
-                        , sendStr);
+                        , bodyStr);
                 Request requestHttp = new Request.Builder()
                     .url(url)//请求的url
                         .post(requestBody)
@@ -156,16 +157,16 @@ public class NoticeController {
                     public void onFailure(Call call, IOException e) {
                         e.printStackTrace();
                         // 数据
-                        noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,sendStr));
+                        noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,bodyStr));
                     }
                     //请求成功执行的方法
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         response.body().string();//
                         if (response.isSuccessful()) { // 成功响应
-                            noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,0,currentTime,0,sendStr));
+                            noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,0,currentTime,0,bodyStr));
                         } else { // 失败
-                            noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,sendStr));
+                            noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,bodyStr));
                           throw new ZtgeoBizRuntimeException(CodeMsg.RECEIVE_EXCEPTION, "请联系相关人员");
                         }
 

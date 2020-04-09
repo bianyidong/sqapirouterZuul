@@ -36,6 +36,7 @@ public class TokenFilter extends ZuulFilter {
         String className = this.getClass().getSimpleName();
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest httpServletRequest = requestContext.getRequest();
+      String u=  httpServletRequest.getParameter("USERNAME");
         String api_id = httpServletRequest.getHeader("api_id");
         int count = apiUserFilterRepository.countApiUserFiltersByFilterBcEqualsAndApiIdEquals(className,api_id);
 

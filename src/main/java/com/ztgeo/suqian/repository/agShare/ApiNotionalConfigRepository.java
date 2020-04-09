@@ -1,7 +1,6 @@
 package com.ztgeo.suqian.repository.agShare;
 
 import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalConfig;
-import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalSharedConfig;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
