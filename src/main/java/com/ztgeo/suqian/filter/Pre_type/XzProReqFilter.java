@@ -51,10 +51,8 @@ public class XzProReqFilter extends ZuulFilter {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-        @Value(value = "${xu.xzqdm}")
+    @Value(value = "${xu.xzqdm}")
     private String xzqdm;
-//    @Value(value = "${xu.ip}")
-//    private String ip;
 
     @Value(value = "${xu.username}")
     private String username;
@@ -62,6 +60,7 @@ public class XzProReqFilter extends ZuulFilter {
     private String password;
     @Value(value = "${sttokenUrl}")
     private String getTokenUrl;
+
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;
@@ -120,13 +119,13 @@ public class XzProReqFilter extends ZuulFilter {
             getHeadJson.put("userName", userName);
             getHeadJson.put("ip", ip);
             Map<String, String> map = new HashMap<String, String>();
-            Map<String, String> paramMap=new HashMap<String, String>();
-            Map<String, File> fileMap=new HashMap<>();
+            Map<String, String> paramMap = new HashMap<String, String>();
+            Map<String, File> fileMap = new HashMap<>();
             map.put("gxData", setResqJson.toJSONString());
             log.info("组织好的请求报文" + map);
             String result = null;
 //            result = HttpClientUtil.httpPostRequest(url, map);
-            result = HttpUtilsAll.post(url,null, map, null).body();
+            result = HttpUtilsAll.post(url, null, map, null).body();
             if (!StringUtils.isEmpty(result)) {
                 requestContext.set(GlobalConstants.ISSUCCESS, "success");
             } else {
@@ -153,7 +152,7 @@ public class XzProReqFilter extends ZuulFilter {
                 log.info("redis中不存在TOKEN信息，需要重新获取！");
 
                 String token = null;
-                String tokenUrl =getTokenUrl;
+                String tokenUrl = getTokenUrl;
                 JSONObject tokenHeardJson = new JSONObject();
 
                 tokenHeardJson.put("xzqdm", xzqdm);

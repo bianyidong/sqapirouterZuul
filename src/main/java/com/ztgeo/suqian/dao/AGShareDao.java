@@ -42,6 +42,8 @@ public class AGShareDao {
     private DzYixingRepository dzYixingRepository;
     @Resource
     private ApiNotionalConfigRepository apiNotionalConfigRepository;
+    @Resource
+    private ApiSqlConfigInfoRepository apiSqlConfigInfoRepository;
     //查询api_id的数量
     @DataSource
     public int countApiBaseInfosByApiIdEquals(String api_id){
@@ -50,6 +52,10 @@ public class AGShareDao {
     @DataSource
     public List<ApiBaseInfo> findApiBaseInfosByApiIdEquals(String api_id){
         return apiBaseInfoRepository.findApiBaseInfosByApiIdEquals(api_id);
+    }
+    @DataSource
+    public List<ApiSqlConfigInfo> findApiSqlConfigInfosByApiId(String apiId){
+        return apiSqlConfigInfoRepository.findApiSqlConfigInfosByApiIdEquals(apiId);
     }
     @DataSource
     public ApiNotionalConfig findApiNotionalSharedConfigsByapiIdEquals(String apiid){
