@@ -31,6 +31,7 @@ public enum CodeMsg {
     AGARSPSIGN_ERROR(416,"共享平台返回重新加签过滤器异常"),
     RECEIVE_EXCEPTION(417,"接收方业务处理错误，待重新发送"),
     ADDSENDBODY_EXCEPTION(418,"请求方日志过滤器异常"),
+    APIIDORFROMUSERISNULL(419,"未获取到from_user或者api_id"),
     FAIL(500, "平台网关内部错误"),
 
     /******************张宇-过滤器异常*******************/

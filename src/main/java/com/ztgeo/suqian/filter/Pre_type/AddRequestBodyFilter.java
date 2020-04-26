@@ -34,7 +34,9 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -64,7 +66,6 @@ public class AddRequestBodyFilter extends ZuulFilter {
             // 获取request
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
-            String username=request.getParameter("USERNAME");
             String uri = request.getRequestURI();
             String url = request.getRequestURL().toString();
             String type = request.getContentType();
@@ -84,6 +85,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
             String requserID = request.getHeader("from_user");
             if (StringUtils.isEmpty(reqapiID) || StringUtils.isEmpty(requserID)) {
                 log.info("20012-请求日志过滤器未获取到from_user或者api_id");
+                throw new Exception("请求日志过滤器未获取到from_user或者api_id");
             } else {
                 apiID = reqapiID;
                 userID = requserID;
@@ -127,7 +129,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
             //return null;
         } catch (Exception e) {
             log.info("请求方日志过滤器异常",e);
-            throw new RuntimeException("20018-请求方日志过滤器异常");
+            throw new RuntimeException("20018-"+e.getMessage()+"请求方日志过滤器异常");
         }
     }
 

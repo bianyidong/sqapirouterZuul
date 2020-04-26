@@ -44,6 +44,8 @@ public class AGShareDao {
     private ApiNotionalConfigRepository apiNotionalConfigRepository;
     @Resource
     private ApiSqlConfigInfoRepository apiSqlConfigInfoRepository;
+    @Resource
+    private ApiSqlwherefieldRepository apiSqlwherefieldRepository;
     //查询api_id的数量
     @DataSource
     public int countApiBaseInfosByApiIdEquals(String api_id){
@@ -56,6 +58,10 @@ public class AGShareDao {
     @DataSource
     public List<ApiSqlConfigInfo> findApiSqlConfigInfosByApiId(String apiId){
         return apiSqlConfigInfoRepository.findApiSqlConfigInfosByApiIdEquals(apiId);
+    }
+    @DataSource
+    public List<Apisqlwherefield> findApisqlwherefieldsByApiIdOrderByFieldorder(String api_id){
+        return apiSqlwherefieldRepository.findApisqlwherefieldsByApiIdOrderByFieldorder(api_id);
     }
     @DataSource
     public ApiNotionalConfig findApiNotionalSharedConfigsByapiIdEquals(String apiid){

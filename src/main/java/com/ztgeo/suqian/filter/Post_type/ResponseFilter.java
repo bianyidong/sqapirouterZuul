@@ -96,7 +96,7 @@ public class ResponseFilter extends ZuulFilter {
             return null;
         } catch (Exception s) {
             log.info("10006-响应通用过滤器内部异常", s);
-            throw new RuntimeException("10006-响应通用过滤器内部异常");
+            throw new RuntimeException("10006-"+s.getMessage());
         } finally {
             ResponseSafeToSignFilter.getFindlly(inputStream, inputStreamOld, inputStreamNew);
         }

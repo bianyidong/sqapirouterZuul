@@ -9,6 +9,7 @@ import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalConfig;
 import com.ztgeo.suqian.entity.ag_datashare.ApiSqlConfigInfo;
+import com.ztgeo.suqian.entity.ag_datashare.Apisqlwherefield;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -67,22 +68,95 @@ public class SqlConfigReqFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-
+        Connection connect = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        String result =null;
         log.info("-------------开始---进入Sql配置接口过滤器-------------");
         RequestContext requestContext = RequestContext.getCurrentContext();
         try {
             HttpServletRequest request = requestContext.getRequest();
             InputStream in = request.getInputStream();
             String requestBody = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
+            JSONObject jsonObject = JSONObject.parseObject(requestBody);
             String api_id = request.getHeader("api_id");
+            //根据api_id获取配置信息
             ApiSqlConfigInfo apiSqlConfigInfo = agShareDao.findApiSqlConfigInfosByApiId(api_id).get(0);
-            String result="测试";
+            if ("Oracle".equals(apiSqlConfigInfo.getDbLx())) {
+                //第一步：注册驱动
+                Class.forName("oracle.jdbc.OracleDriver");//oracle
+                //第二步：获取连接
+                connect = DriverManager.getConnection("jdbc:oracle:thin:@" + apiSqlConfigInfo.getDbIp() + ":" + apiSqlConfigInfo.getDbName(), apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());//oracle
+
+            } else if ("MySQL".equals(apiSqlConfigInfo.getDbLx())) {
+                //第一步：注册驱动
+                Class.forName("com.mysql.jdbc.Driver");
+                //第二步：获取连接
+                connect = DriverManager.getConnection("jdbc:mysql://" + apiSqlConfigInfo.getDbIp() + "/" + apiSqlConfigInfo.getDbName() + "?useUnicode=true&characterEncoding=UTF-8", apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());
+            }
+            //第三步：获取执行sql语句对象
+            String sql = apiSqlConfigInfo.getDbSql();
+            List<Apisqlwherefield> apisqlwherefieldList = agShareDao.findApisqlwherefieldsByApiIdOrderByFieldorder(api_id);
+            for (int i = 0; i < apisqlwherefieldList.size(); i++) {{
+                Apisqlwherefield apisqlwherefield = apisqlwherefieldList.get(i);
+                jsonObject.get(apisqlwherefield.getTablefield());
+            }}
+            //条件空时的处理方法  https://www.iteye.com/blog/free-zhou-671193
+            PreparedStatement preState = connect.prepareStatement(sql);
+
+            for (int i = 1; i <= apisqlwherefieldList.size(); i++) {
+                Apisqlwherefield apisqlwherefield = apisqlwherefieldList.get(i - 1);
+                if ("like".equals(apisqlwherefield.getFieldtype())) {
+                    Object va = jsonObject.get(apisqlwherefield.getTablefield());
+                    preState.setObject(i, "%" + va + "%");
+                } else {
+                    Object va = jsonObject.get(apisqlwherefield.getTablefield());
+                    preState.setObject(i, va);
+                }
+            }
+            //第四步：执行sql语句
+            resultSet = preState.executeQuery();
+
+            ResultSetMetaData data = resultSet.getMetaData();
+            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+            //第五步：处理结果集
+            while (resultSet.next()) {
+                JSONObject json = new JSONObject();
+                Map<String, Object> rowData = new HashMap<String, Object>();
+                for (int i = 1; i <= data.getColumnCount(); i++) {
+                    int columnCount = data.getColumnCount();
+                    String columnName = data.getColumnName(i);
+                    String columnValue = resultSet.getString(i);
+
+                    rowData.put(data.getColumnName(i), resultSet.getObject(i));
+                    json.put(columnName, columnValue);
+                } //判断返回是数组还是对象
+                if ("1".equals(apiSqlConfigInfo.getDbRestype())) {
+                    result=json.toJSONString();
+                    break;
+                }else {
+                    list.add(json);
+                    result=list.toString();
+                }
+
+            }
+
             requestContext.setResponseBody(result);
+            requestContext.set(GlobalConstants.ISSUCCESS, "success");
             requestContext.setSendZuulResponse(false);
         } catch (Exception e) {
             log.info("SQL配置请求过滤器异常", e);
             log.info("-------------结束---Sql配置接口-------------");
-            throw new RuntimeException("30018-SQL配置过滤器异常");
+            throw new RuntimeException("30018-" + e.getMessage() + "SQL配置过滤器异常");
+        } finally {
+            //：关闭资源
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return null;
 

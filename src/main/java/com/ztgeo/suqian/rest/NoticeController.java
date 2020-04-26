@@ -68,6 +68,11 @@ public class NoticeController {
             String userID = request.getHeader("from_user");
             String noticeCode = request.getHeader("api_id");
             RequestContext ctx = RequestContext.getCurrentContext();
+            if(StringUtils.isBlank(userID)||StringUtils.isBlank(noticeCode)){
+                log.info("未获取到from_user或者api_id");
+//                throw new ZtgeoBizZuulException(CodeMsg.APIIDORFROMUSERISNULL);
+                return ResultMap.error(CodeMsg.APIIDORFROMUSERISNULL).toString();
+            }
             //2.获取body中的加密和加签数据并做解密
 //            JSONObject jsonObject = JSON.parseObject(bodyStr);
 //            String data = jsonObject.get("data").toString();
@@ -144,7 +149,7 @@ public class NoticeController {
                         .build();
 //                okhttp3.RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
 //                        , sendStr);
-                okhttp3.RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
+                okhttp3.RequestBody requestBody = FormBody.create(MediaType.parse("charset=utf-8")
                         , bodyStr);
                 Request requestHttp = new Request.Builder()
                     .url(url)//请求的url
@@ -176,7 +181,7 @@ public class NoticeController {
             return ResultMap.ok(CodeMsg.SUCCESS).toString();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ZtgeoBizZuulException(CodeMsg.FAIL, "通知功能内部异常");
+            return ResultMap.error(CodeMsg.FAIL).toString();
         }
 
     }

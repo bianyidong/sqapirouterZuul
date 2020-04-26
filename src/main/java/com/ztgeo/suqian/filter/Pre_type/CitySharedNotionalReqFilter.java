@@ -123,7 +123,7 @@ public class CitySharedNotionalReqFilter extends ZuulFilter {
 
         } catch (Exception e) {
             log.info("30015-转发市级共享接口异常", e);
-            throw new RuntimeException("30015-转发市级共享接口异常");
+            throw new RuntimeException("30015-"+e.getMessage()+"转发市级共享接口异常");
         }
         return null;
     }

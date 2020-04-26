@@ -28,4 +28,11 @@ public class ApiSqlConfigInfo implements Serializable {
     private String dbIp;
     @Column(name = "Db_sql")
     private String dbSql;
+    @Column(name = "Db_name")
+    private String dbName;
+    @Column(name = "Db_lx")
+    private String dbLx;
+    @Column(name = "Db_restype")
+    private String dbRestype;
 }
+
