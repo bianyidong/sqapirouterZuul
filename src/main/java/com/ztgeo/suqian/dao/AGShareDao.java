@@ -46,10 +46,21 @@ public class AGShareDao {
     private ApiSqlConfigInfoRepository apiSqlConfigInfoRepository;
     @Resource
     private ApiSqlwherefieldRepository apiSqlwherefieldRepository;
+    @Resource
+    private  ApiSqlParentChildRepository apiSqlParentChildRepository;
     //查询api_id的数量
     @DataSource
     public int countApiBaseInfosByApiIdEquals(String api_id){
         return apiBaseInfoRepository.countApiBaseInfosByApiIdEquals(api_id);
+    }
+    //查询是否存在子查询
+    @DataSource
+    public int countApiParentChildByApiParenttableidEquals(String api_id){
+        return apiSqlParentChildRepository.countApiParentChildByApiParenttableidEquals(api_id);
+    }
+    //查询主子表对应关系
+    public List<ApiParentChild> findApiParentChildByApiParenttableidEquals(String api_id){
+        return apiSqlParentChildRepository.findApiParentChildByApiParenttableidEquals(api_id);
     }
     @DataSource
     public List<ApiBaseInfo> findApiBaseInfosByApiIdEquals(String api_id){

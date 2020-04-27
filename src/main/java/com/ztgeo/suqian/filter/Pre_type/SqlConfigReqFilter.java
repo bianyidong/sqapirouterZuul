@@ -1,16 +1,16 @@
 package com.ztgeo.suqian.filter.Pre_type;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.dao.AGShareDao;
-import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
-import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalConfig;
-import com.ztgeo.suqian.entity.ag_datashare.ApiSqlConfigInfo;
-import com.ztgeo.suqian.entity.ag_datashare.Apisqlwherefield;
+import com.ztgeo.suqian.entity.ag_datashare.*;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,19 +68,56 @@ public class SqlConfigReqFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-        Connection connect = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        String result =null;
+        String result=null;
         log.info("-------------开始---进入Sql配置接口过滤器-------------");
         RequestContext requestContext = RequestContext.getCurrentContext();
         try {
             HttpServletRequest request = requestContext.getRequest();
             InputStream in = request.getInputStream();
             String requestBody = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
-            JSONObject jsonObject = JSONObject.parseObject(requestBody);
+//            JSONObject jsonObject = JSONObject.parseObject(requestBody);
             String api_id = request.getHeader("api_id");
-            //根据api_id获取配置信息
+            result=  respSult(api_id,requestBody);
+            System.out.println("ff"+result);
+            int isExist=agShareDao.countApiParentChildByApiParenttableidEquals(api_id);
+            //判断是否存在主子表
+            if(isExist==0){
+                result=result;
+            }else {
+                if (isjson(result.toString())){
+                    List<ApiParentChild> apiParentChildren=agShareDao.findApiParentChildByApiParenttableidEquals(api_id);
+                    JSONObject js=JSONObject.parseObject(result);
+                    for (int i=0;i<apiParentChildren.size();i++){
+                     js.put(apiParentChildren.get(i).getChildKeyname(),respSult(apiParentChildren.get(i).getChildTableid(), result));
+                    }
+                    result=JSONObject.toJSONString(js,SerializerFeature.WriteNullStringAsEmpty);
+
+                }else {
+//                    List<Map<String, Object>> list=Arrays.asList(result);
+
+                }
+
+            }
+
+
+            requestContext.setResponseBody(result);
+            requestContext.set(GlobalConstants.ISSUCCESS, "success");
+            requestContext.setSendZuulResponse(false);
+        } catch (Exception e) {
+            log.info("SQL配置请求过滤器异常", e);
+            log.info("-------------结束---Sql配置接口-------------");
+            throw new RuntimeException("30018-" + e.getMessage() + "SQL配置过滤器异常");
+        }
+        return null;
+
+    }
+    private String respSult(String api_id,String requestBody){
+        Connection connect = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        String sqresult =null;
+        JSONObject jsonObject=JSON.parseObject(requestBody);
+        try {
             ApiSqlConfigInfo apiSqlConfigInfo = agShareDao.findApiSqlConfigInfosByApiId(api_id).get(0);
             if ("Oracle".equals(apiSqlConfigInfo.getDbLx())) {
                 //第一步：注册驱动
@@ -118,37 +155,31 @@ public class SqlConfigReqFilter extends ZuulFilter {
             resultSet = preState.executeQuery();
 
             ResultSetMetaData data = resultSet.getMetaData();
-            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+          List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
             //第五步：处理结果集
             while (resultSet.next()) {
                 JSONObject json = new JSONObject();
-                Map<String, Object> rowData = new HashMap<String, Object>();
                 for (int i = 1; i <= data.getColumnCount(); i++) {
                     int columnCount = data.getColumnCount();
                     String columnName = data.getColumnName(i);
                     String columnValue = resultSet.getString(i);
-
-                    rowData.put(data.getColumnName(i), resultSet.getObject(i));
-                    json.put(columnName, columnValue);
-                } //判断返回是数组还是对象
+                    json.put(columnName, columnValue==null?"":columnValue);
+                }
+                System.out.println("s"+json);
+                //判断返回是数组还是对象,如果是对象直接显示第一条数据
                 if ("1".equals(apiSqlConfigInfo.getDbRestype())) {
-                    result=json.toJSONString();
+                    sqresult=JSONObject.toJSONString(json, SerializerFeature.WriteNullStringAsEmpty);
                     break;
                 }else {
                     list.add(json);
-                    result=list.toString();
+                    sqresult=list.toString();
                 }
 
             }
-
-            requestContext.setResponseBody(result);
-            requestContext.set(GlobalConstants.ISSUCCESS, "success");
-            requestContext.setSendZuulResponse(false);
-        } catch (Exception e) {
-            log.info("SQL配置请求过滤器异常", e);
-            log.info("-------------结束---Sql配置接口-------------");
-            throw new RuntimeException("30018-" + e.getMessage() + "SQL配置过滤器异常");
-        } finally {
+        }catch (Exception e){
+            throw new RuntimeException("获取sql信息异常");
+        }finally {
             //：关闭资源
             try {
                 if (resultSet != null) resultSet.close();
@@ -158,8 +189,16 @@ public class SqlConfigReqFilter extends ZuulFilter {
                 e.printStackTrace();
             }
         }
-        return null;
+       return sqresult;
+    }
+    private boolean isjson(String isjson){
+        try {
 
+            JSONObject jsonStr= JSONObject.parseObject(isjson);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
