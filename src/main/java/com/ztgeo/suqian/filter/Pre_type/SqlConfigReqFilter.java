@@ -1,6 +1,7 @@
 package com.ztgeo.suqian.filter.Pre_type;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.netflix.zuul.ZuulFilter;
@@ -10,6 +11,7 @@ import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.*;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
+import com.ztgeo.suqian.utils.StringUtils;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,6 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +69,7 @@ public class SqlConfigReqFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-        String result=null;
+        Object result = null;
         log.info("-------------开始---进入Sql配置接口过滤器-------------");
         RequestContext requestContext = RequestContext.getCurrentContext();
         try {
@@ -77,30 +78,47 @@ public class SqlConfigReqFilter extends ZuulFilter {
             String requestBody = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
 //            JSONObject jsonObject = JSONObject.parseObject(requestBody);
             String api_id = request.getHeader("api_id");
-            result=  respSult(api_id,requestBody);
-            System.out.println("ff"+result);
-            int isExist=agShareDao.countApiParentChildByApiParenttableidEquals(api_id);
+            result = respSult(api_id, requestBody);
+            System.out.println("ff" + result);
+            int isExist = agShareDao.countApiParentChildByApiParenttableidEquals(api_id);
             //判断是否存在主子表
-            if(isExist==0){
-                result=result;
-            }else {
-                if (isjson(result.toString())){
-                    List<ApiParentChild> apiParentChildren=agShareDao.findApiParentChildByApiParenttableidEquals(api_id);
-                    JSONObject js=JSONObject.parseObject(result);
-                    for (int i=0;i<apiParentChildren.size();i++){
-                     js.put(apiParentChildren.get(i).getChildKeyname(),respSult(apiParentChildren.get(i).getChildTableid(), result));
+            if (isExist == 0) {
+                result = result;
+            } else {
+                if (!StringUtils.isBlank(result.toString())) {
+                    if (isjson(result.toString())) {
+                        List<ApiParentChild> apiParentChildren = agShareDao.findApiParentChildByApiParenttableidEquals(api_id);
+                        JSONObject js = JSONObject.parseObject(result.toString());
+                        for (int i = 0; i < apiParentChildren.size(); i++) {
+                            js.put(apiParentChildren.get(i).getChildKeyname(), respSult(apiParentChildren.get(i).getChildTableid(), result.toString()));
+                        }
+                        result = JSONObject.toJSONString(js, SerializerFeature.WriteNullStringAsEmpty);
+
+                    } else {
+                        JSONArray jsonArray = JSONArray.parseArray(result.toString());
+                        int d = jsonArray.size();
+//                    List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            List<ApiParentChild> apiParentChildren = agShareDao.findApiParentChildByApiParenttableidEquals(api_id);
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            for (int j = 0; j < apiParentChildren.size(); j++) {
+                                jsonObject.put(apiParentChildren.get(j).getChildKeyname(), respSult(apiParentChildren.get(j).getChildTableid(), jsonObject.toJSONString()));
+                            }
+
+                            System.out.println(jsonObject);
+                        }
+                        result = jsonArray;
+                        System.out.println(jsonArray);
+
                     }
-                    result=JSONObject.toJSONString(js,SerializerFeature.WriteNullStringAsEmpty);
-
-                }else {
-//                    List<Map<String, Object>> list=Arrays.asList(result);
-
+                } else {
+                    result = result;
                 }
 
             }
 
 
-            requestContext.setResponseBody(result);
+            requestContext.setResponseBody(result.toString());
             requestContext.set(GlobalConstants.ISSUCCESS, "success");
             requestContext.setSendZuulResponse(false);
         } catch (Exception e) {
@@ -111,12 +129,14 @@ public class SqlConfigReqFilter extends ZuulFilter {
         return null;
 
     }
-    private String respSult(String api_id,String requestBody){
+
+    //jdbc查询数据并
+    private Object respSult(String api_id, String requestBody) {
         Connection connect = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        String sqresult =null;
-        JSONObject jsonObject=JSON.parseObject(requestBody);
+        Object sqresult = "";
+        JSONObject jsonObject = JSON.parseObject(requestBody);
         try {
             ApiSqlConfigInfo apiSqlConfigInfo = agShareDao.findApiSqlConfigInfosByApiId(api_id).get(0);
             if ("Oracle".equals(apiSqlConfigInfo.getDbLx())) {
@@ -130,14 +150,19 @@ public class SqlConfigReqFilter extends ZuulFilter {
                 Class.forName("com.mysql.jdbc.Driver");
                 //第二步：获取连接
                 connect = DriverManager.getConnection("jdbc:mysql://" + apiSqlConfigInfo.getDbIp() + "/" + apiSqlConfigInfo.getDbName() + "?useUnicode=true&characterEncoding=UTF-8", apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());
+            }else if ("SQL Server".equals(apiSqlConfigInfo.getDbLx())){
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                connect=DriverManager.getConnection("jdbc:sqlserver://" + apiSqlConfigInfo.getDbIp() + ";DatabaseName=" + apiSqlConfigInfo.getDbName(),apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());
             }
             //第三步：获取执行sql语句对象
             String sql = apiSqlConfigInfo.getDbSql();
             List<Apisqlwherefield> apisqlwherefieldList = agShareDao.findApisqlwherefieldsByApiIdOrderByFieldorder(api_id);
-            for (int i = 0; i < apisqlwherefieldList.size(); i++) {{
-                Apisqlwherefield apisqlwherefield = apisqlwherefieldList.get(i);
-                jsonObject.get(apisqlwherefield.getTablefield());
-            }}
+            for (int i = 0; i < apisqlwherefieldList.size(); i++) {
+                {
+                    Apisqlwherefield apisqlwherefield = apisqlwherefieldList.get(i);
+                    jsonObject.get(apisqlwherefield.getTablefield());
+                }
+            }
             //条件空时的处理方法  https://www.iteye.com/blog/free-zhou-671193
             PreparedStatement preState = connect.prepareStatement(sql);
 
@@ -155,7 +180,7 @@ public class SqlConfigReqFilter extends ZuulFilter {
             resultSet = preState.executeQuery();
 
             ResultSetMetaData data = resultSet.getMetaData();
-          List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
             //第五步：处理结果集
             while (resultSet.next()) {
@@ -164,22 +189,35 @@ public class SqlConfigReqFilter extends ZuulFilter {
                     int columnCount = data.getColumnCount();
                     String columnName = data.getColumnName(i);
                     String columnValue = resultSet.getString(i);
-                    json.put(columnName, columnValue==null?"":columnValue);
+                    json.put(columnName, columnValue == null ? "" : columnValue);
                 }
-                System.out.println("s"+json);
+                System.out.println("s" + json);
                 //判断返回是数组还是对象,如果是对象直接显示第一条数据
                 if ("1".equals(apiSqlConfigInfo.getDbRestype())) {
-                    sqresult=JSONObject.toJSONString(json, SerializerFeature.WriteNullStringAsEmpty);
+                    sqresult = JSONObject.toJSONString(json, SerializerFeature.WriteNullStringAsEmpty);
                     break;
-                }else {
+                } else {
                     list.add(json);
-                    sqresult=list.toString();
+                    sqresult = list;
                 }
 
             }
-        }catch (Exception e){
+//            if (!StringUtils.isBlank(apiSqlConfigInfo.getDbAllowmostrownum())&&!"1".equals(apiSqlConfigInfo.getDbRestype())){
+//                if (Integer.parseInt(apiSqlConfigInfo.getDbAllowmostrownum())<list.size()){
+//                sqresult=list.subList(0,Integer.parseInt(apiSqlConfigInfo.getDbAllowmostrownum()));
+//                }else {
+//                    sqresult=list;
+//                }
+//
+//            }else if(isjson(sqresult.toString())){
+//                sqresult= sqresult;
+//            }else {
+//                sqresult=list;
+//            }
+
+        } catch (Exception e) {
             throw new RuntimeException("获取sql信息异常");
-        }finally {
+        } finally {
             //：关闭资源
             try {
                 if (resultSet != null) resultSet.close();
@@ -189,12 +227,14 @@ public class SqlConfigReqFilter extends ZuulFilter {
                 e.printStackTrace();
             }
         }
-       return sqresult;
+        return sqresult;
     }
-    private boolean isjson(String isjson){
+
+    //判断是否是json对象
+    private boolean isjson(String isjson) {
         try {
 
-            JSONObject jsonStr= JSONObject.parseObject(isjson);
+            JSONObject jsonStr = JSONObject.parseObject(isjson);
             return true;
         } catch (Exception e) {
             return false;

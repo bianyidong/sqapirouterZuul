@@ -34,5 +34,7 @@ public class ApiSqlConfigInfo implements Serializable {
     private String dbLx;
     @Column(name = "Db_restype")
     private String dbRestype;
+    @Column(name="Db_allowmostrownum")
+    private String dbAllowmostrownum;
 }
 
