@@ -79,7 +79,6 @@ public class SqlConfigReqFilter extends ZuulFilter {
 //            JSONObject jsonObject = JSONObject.parseObject(requestBody);
             String api_id = request.getHeader("api_id");
             result = respSult(api_id, requestBody);
-            System.out.println("ff" + result);
             int isExist = agShareDao.countApiParentChildByApiParenttableidEquals(api_id);
             //判断是否存在主子表
             if (isExist == 0) {
@@ -144,15 +143,14 @@ public class SqlConfigReqFilter extends ZuulFilter {
                 Class.forName("oracle.jdbc.OracleDriver");//oracle
                 //第二步：获取连接
                 connect = DriverManager.getConnection("jdbc:oracle:thin:@" + apiSqlConfigInfo.getDbIp() + ":" + apiSqlConfigInfo.getDbName(), apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());//oracle
-
             } else if ("MySQL".equals(apiSqlConfigInfo.getDbLx())) {
                 //第一步：注册驱动
                 Class.forName("com.mysql.jdbc.Driver");
                 //第二步：获取连接
                 connect = DriverManager.getConnection("jdbc:mysql://" + apiSqlConfigInfo.getDbIp() + "/" + apiSqlConfigInfo.getDbName() + "?useUnicode=true&characterEncoding=UTF-8", apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());
-            }else if ("SQL Server".equals(apiSqlConfigInfo.getDbLx())){
+            } else if ("SQL Server".equals(apiSqlConfigInfo.getDbLx())) {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                connect=DriverManager.getConnection("jdbc:sqlserver://" + apiSqlConfigInfo.getDbIp() + ";DatabaseName=" + apiSqlConfigInfo.getDbName(),apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());
+                connect = DriverManager.getConnection("jdbc:sqlserver://" + apiSqlConfigInfo.getDbIp() + ";DatabaseName=" + apiSqlConfigInfo.getDbName(), apiSqlConfigInfo.getDbUsername(), apiSqlConfigInfo.getDbPassword());
             }
             //第三步：获取执行sql语句对象
             String sql = apiSqlConfigInfo.getDbSql();
@@ -202,21 +200,21 @@ public class SqlConfigReqFilter extends ZuulFilter {
                 }
 
             }
-//            if (!StringUtils.isBlank(apiSqlConfigInfo.getDbAllowmostrownum())&&!"1".equals(apiSqlConfigInfo.getDbRestype())){
-//                if (Integer.parseInt(apiSqlConfigInfo.getDbAllowmostrownum())<list.size()){
-//                sqresult=list.subList(0,Integer.parseInt(apiSqlConfigInfo.getDbAllowmostrownum()));
-//                }else {
-//                    sqresult=list;
-//                }
-//
-//            }else if(isjson(sqresult.toString())){
-//                sqresult= sqresult;
-//            }else {
-//                sqresult=list;
-//            }
+            if (!StringUtils.isBlank(apiSqlConfigInfo.getDbAllowmostrownum()) && !"1".equals(apiSqlConfigInfo.getDbRestype())) {
+                if (Integer.parseInt(apiSqlConfigInfo.getDbAllowmostrownum()) < list.size()) {
+                    sqresult = list.subList(0, Integer.parseInt(apiSqlConfigInfo.getDbAllowmostrownum()));
+                } else {
+                    sqresult = list;
+                }
+
+            } else if (isjson(sqresult.toString())) {
+                sqresult = sqresult;
+            } else {
+                sqresult = list;
+            }
 
         } catch (Exception e) {
-            throw new RuntimeException("获取sql信息异常");
+            throw new RuntimeException("执行sql查询信息异常");
         } finally {
             //：关闭资源
             try {
@@ -233,7 +231,6 @@ public class SqlConfigReqFilter extends ZuulFilter {
     //判断是否是json对象
     private boolean isjson(String isjson) {
         try {
-
             JSONObject jsonStr = JSONObject.parseObject(isjson);
             return true;
         } catch (Exception e) {
