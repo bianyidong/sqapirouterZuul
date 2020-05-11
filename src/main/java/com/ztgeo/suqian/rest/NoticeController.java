@@ -10,6 +10,7 @@ import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
 import com.ztgeo.suqian.common.ZtgeoBizZuulException;
 import com.ztgeo.suqian.config.RedisOperator;
 
+import com.ztgeo.suqian.dao.AGLogDao;
 import com.ztgeo.suqian.entity.ag_datashare.NoticeBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.NoticeRecord;
 import com.ztgeo.suqian.entity.ag_datashare.UserKeyInfo;
@@ -57,6 +58,8 @@ public class NoticeController {
     private NoticeRecordRepository noticeRecordRepository;
     @Autowired
     private RedisOperator redis;
+    @Resource
+    private AGLogDao agLogDao;
     /**
      * 发送通知
      */
@@ -161,17 +164,20 @@ public class NoticeController {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         e.printStackTrace();
-                        // 数据
-                        noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,bodyStr));
+                        NoticeRecord noticeRecord =new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,bodyStr);
+                        // 保存日志数据
+                        agLogDao.saveNoticeRecord(noticeRecord);
                     }
                     //请求成功执行的方法
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         response.body().string();//
                         if (response.isSuccessful()) { // 成功响应
-                            noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,0,currentTime,0,bodyStr));
+                            NoticeRecord noticeRecord =new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,0,currentTime,0,bodyStr);
+                            agLogDao.saveNoticeRecord(noticeRecord);
                         } else { // 失败
-                            noticeRecordRepository.save(new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,bodyStr));
+                            NoticeRecord noticeRecord =new NoticeRecord(id,userID,receiverId,url,receiverName,name,noticeCode,typedesc,1,currentTime,0,bodyStr);
+                            agLogDao.saveNoticeRecord(noticeRecord);
                           throw new ZtgeoBizRuntimeException(CodeMsg.RECEIVE_EXCEPTION, "请联系相关人员");
                         }
 

@@ -2,6 +2,7 @@ package com.ztgeo.suqian.rest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ztgeo.suqian.common.ZtgeoBizRuntimeException;
+import com.ztgeo.suqian.dao.AGLogDao;
 import com.ztgeo.suqian.entity.ag_datashare.NoticeRecord;
 import com.ztgeo.suqian.msg.CodeMsg;
 import com.ztgeo.suqian.msg.ResultMap;
@@ -34,6 +35,8 @@ import java.util.List;
 public class RouteController {
     @Resource
     private NoticeRecordRepository noticeRecordRepository;
+    @Resource
+    private AGLogDao agLogDao;
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
    private static final Logger log = LoggerFactory.getLogger(RouteController.class);
@@ -46,10 +49,11 @@ public class RouteController {
         return ResultMap.ok().toString();
     }
 
-    // 每天下午17：30执行通知重发
-    @Scheduled(cron = "0 30 20 * * ?")
+    // 每天下午17：30执行通知重发，样例每天凌晨1点执行一次：0 0 1 * * ?
+    @Scheduled(cron = "0 42 16 * * ?")
     public void sendNoticeRestart(){
-        List<NoticeRecord> listLogs = noticeRecordRepository.findNoticeRecordsByStatusAndCountLessThan(1,3);
+        List<NoticeRecord> listLogs = agLogDao.findNoticeRecordsByStatusAndCountLessThan(1,3);
+        log.info("开始执行失败通知定时推送");
         for (int i = 0; i < listLogs.size(); i++) {
             try {
                 String rspData = HttpOperation.sendJsonHttp(listLogs.get(i).getReceiverUrl(), listLogs.get(i).getRequestData());
@@ -62,14 +66,15 @@ public class RouteController {
                         noticeRecordRepository.updateNoticeRecordStatusSuccess(listLogs.get(i).getRecordId());
                     } else {
                         int count = listLogs.get(i).getCount() + 1;
-                        noticeRecordRepository.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
+                        agLogDao.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 int count = listLogs.get(i).getCount() + 1;
-                noticeRecordRepository.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
+                agLogDao.updateNoticeRecordCount(count,listLogs.get(i).getRecordId());
             }
         }
+        log.info("结束执行失败通知定时推送");
     }
 }
