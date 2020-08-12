@@ -7,7 +7,6 @@ import com.netflix.zuul.exception.ZuulException;
 import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.dao.AGShareDao;
 import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
-import com.ztgeo.suqian.entity.ag_datashare.ApiNotionalConfig;
 import com.ztgeo.suqian.entity.ag_datashare.ApiSqlConfigInfo;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
 import org.slf4j.Logger;

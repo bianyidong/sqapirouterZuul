@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="apiRouterZuulGate" options="-parameters -extdirs E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate/src/main/resources/libs" />
+      <module name="apiRouterZuulGate" options="-parameters -extdirs E:\File\DataSharingServer\NewDataShringServer\宿迁85\apiRouterZuulGate/src/main/resources/libs" />
     </option>
   </component>
 </project>

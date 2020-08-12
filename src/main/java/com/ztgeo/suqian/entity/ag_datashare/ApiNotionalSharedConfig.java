@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "api_notionalshared_config1")//宿迁国家级过滤器配置更改表名测试api_notionalshared_config
+@Entity(name = "api_notionalshared_config")//宿迁国家级过滤器配置更改表名测试api_notionalshared_config
 public class ApiNotionalSharedConfig implements Serializable {
     @Id
     @Column(name = "userid")

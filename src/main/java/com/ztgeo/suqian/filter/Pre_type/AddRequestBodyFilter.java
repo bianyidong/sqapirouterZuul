@@ -64,7 +64,6 @@ public class AddRequestBodyFilter extends ZuulFilter {
             // 获取request
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
-            String username=request.getParameter("USERNAME");
             String uri = request.getRequestURI();
             String url = request.getRequestURL().toString();
             String type = request.getContentType();

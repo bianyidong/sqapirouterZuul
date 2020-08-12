@@ -54,8 +54,3 @@ customAttributes:
   httpName: "http_db"
 yxtokenpath: http://192.168.1.251:1104/public/oauth/token
 sqnankangkey: nankang
-xu:
-  xzqdm: 320300
-  username: gx320300
-  password: 6f715e67548d147c17cd408fe4201cc1
-sttokenUrl: http://10.0.0.6:8090/realestate-supervise-exchange/api/v1/bdc/token
