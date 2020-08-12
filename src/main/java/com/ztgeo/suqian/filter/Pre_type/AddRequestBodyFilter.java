@@ -87,6 +87,7 @@ public class AddRequestBodyFilter extends ZuulFilter {
                 apiID = reqapiID;
                 userID = requserID;
             }
+
 //            List<ApiUserFilter> listApiuserFilter = apiUserFilterRepository.findApiUserFiltersByApiId(apiID);
 //            if (listApiuserFilter.size() == 0) {
 //                log.info("该接口没有配置需要配置的过滤器");
