@@ -42,23 +42,5 @@ public class ShengController {
             return respStr;
         }
 
-
-//        String token = null;
-//        try {
-//            String tokenUrl = "https://2.211.38.98:8343/v1/apigw/oauth2/token";
-//
-//            Map<String,String> map = new HashMap<>();
-//            map.put("grant_type","client_credentials");
-//            map.put("client_id","8947f32223bf4174bc7a014a96666ffc");
-//            map.put("client_secret","2805d50ef71246d3a394e078ba4a68fc");
-//            map.put("scope","default");
-//
-//            token = HttpUtilsAll.post(tokenUrl,map).body();
-//
-//            log.info("toke:" + token);
-//        } catch (Exception e) {
-//            log.info("异常了",e);
-//        }
-//        return token;
     }
 }

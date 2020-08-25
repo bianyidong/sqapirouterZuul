@@ -41,7 +41,6 @@ public class ManController {
     private AGLogDao agLogDao;
     @Resource
     private RxdbService rxdbService;
-    private String UserFilter = "";
     @RequestMapping(value = "/garx",method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     @ApiOperation(value = "转发人像对比接口", notes = "为宿迁各程序调用国土资源政务外网接口提供转发", httpMethod = "POST")
     @ResponseBody
@@ -80,7 +79,6 @@ public class ManController {
                 apiAccessRecord.setUserName(userName);
                 apiAccessRecord.setApiName(apiBaseInfo.getApiName());
                 apiAccessRecord.setApiUrl(apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath());
-                //apiAccessRecord.setFilterUser(UserFilter);
                 apiAccessRecord.setType("post");
                 apiAccessRecord.setAccessClientIp(requesturl);
                 apiAccessRecord.setUri(requesturl);
