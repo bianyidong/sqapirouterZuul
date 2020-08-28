@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="2e93136c-d37b-41ea-8edd-77ae8c271ee7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/controller/ManController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/controller/ManController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/controller/ShengController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/controller/ShengController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/RxdbService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/RxdbService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/ShengService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/ShengService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +222,10 @@
       <workItem from="1597215131309" duration="32000" />
       <workItem from="1597215185762" duration="1100000" />
       <workItem from="1597971349559" duration="2009000" />
-      <workItem from="1598322124481" duration="1334000" />
+      <workItem from="1598322124481" duration="3067000" />
+      <workItem from="1598495554444" duration="7498000" />
+      <workItem from="1598578859393" duration="520000" />
+      <workItem from="1598584663695" duration="1021000" />
     </task>
     <task id="LOCAL-00001" summary="徐州省级过滤器">
       <created>1582521295416</created>
@@ -277,7 +283,14 @@
       <option name="project" value="LOCAL" />
       <updated>1597216841450</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="测试85">
+      <created>1598323537698</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1598323537698</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,20 +308,21 @@
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1230" y="266" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1591003797551" />
-    <state x="451" y="110" key="CommitChangelistDialog2" timestamp="1597216840434">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2371" y="110" key="CommitChangelistDialog2" timestamp="1598323536855">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="451" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1597216840434" />
+    <state x="2371" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598323536855" />
     <state width="521" height="466" key="DebuggerActiveHint" timestamp="1591004601362">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state width="521" height="466" key="DebuggerActiveHint/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1591004601362" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1597974607359">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1598579383180">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="-1180" y="275" key="FileChooserDialogImpl/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1590998061068" />
     <state x="740" y="275" key="FileChooserDialogImpl/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1591061292411" />
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1597974607359" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598579383180" />
     <state width="1877" height="238" key="GridCell.Tab.0.bottom" timestamp="1591061293353">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -361,18 +375,25 @@
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="235" key="GridCell.Tab.2.right/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1591058819299" />
-    <state x="552" y="241" key="Vcs.Push.Dialog.v2" timestamp="1597216851604">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2472" y="241" key="Vcs.Push.Dialog.v2" timestamp="1598323538915">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1597216851604" />
+    <state x="2472" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598323538915" />
     <state width="970" height="530" key="XDebugger.FullValuePopup" timestamp="1590998590192">
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state width="970" height="530" key="XDebugger.FullValuePopup/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1590998590192" />
-    <state x="636" y="253" width="660" height="534" key="find.popup" timestamp="1593401697800">
+    <state x="636" y="253" width="660" height="534" key="find.popup" timestamp="1598585626064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="-1284" y="253" width="660" height="534" key="find.popup/-1920.0.1920.1040/0.0.1920.1040@-1920.0.1920.1040" timestamp="1591004323017" />
     <state x="636" y="253" width="660" height="534" key="find.popup/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1593401697800" />
+    <state x="636" y="253" width="660" height="534" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598585626064" />
+    <state x="636" y="253" width="660" height="534" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598495864761" />
+    <state x="2602" y="431" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1598335721696">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2602" y="431" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598335721696" />
   </component>
 </project>

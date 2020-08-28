@@ -11,10 +11,12 @@ import com.ztgeo.suqian.repository.agShare.ApiBaseInfoRepository;
 import com.ztgeo.suqian.repository.agShare.ApiNotionalSharedConfigRepository;
 import com.ztgeo.suqian.repository.agShare.ApiUserFilterRepository;
 import com.ztgeo.suqian.utils.HttpOperation;
+import com.ztgeo.suqian.utils.HttpUtilsAll;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,7 +47,16 @@ public class ProvinceSharedReqFilter extends ZuulFilter {
     private ApiBaseInfoRepository apiBaseInfoRepository;
     @Autowired
     private StringRedisTemplate redisTemplate;
-
+    @Value(value = "${sqtoke.sqjdtokenurl}")
+    private String sqjdtokenurl;
+    @Value(value = "${sqtoke.sqjdtokenurl}")
+    private String client_credentials;
+    @Value(value = "${sqtoke.client_id}")
+    private String client_id;
+    @Value(value = "${sqtoke.client_secret}")
+    private String client_secret;
+    @Value(value = "${sqtoke.client_secret}")
+    private String scope;
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;
@@ -128,25 +141,41 @@ public class ProvinceSharedReqFilter extends ZuulFilter {
 
     // token获取与配置
     private synchronized String getProviceToken(String configKey) {
-        boolean totalIsHasKey = redisTemplate.hasKey(configKey);
+        try {
+            boolean totalIsHasKey = redisTemplate.hasKey(configKey);
 
-        // 不存在
-        if (!totalIsHasKey) {
-            String token = null;
-            String tokenUrl = "https://2.211.38.98:8343/v1/apigw/oauth2/token";
-            String tokenParam = "grant_type=client_credentials&client_id=8947f32223bf4174bc7a014a96666ffc&client_secret=2805d50ef71246d3a394e078ba4a68fc&scope=default";
-            String tokenRespStr = HttpOperation.sendPostByApplicationXwwwFromUrlendcoded(tokenUrl,tokenParam);
-            JSONObject tokenRespJson = JSONObject.parseObject(tokenRespStr);
-            token = tokenRespJson.getString("access_token");
+            // 不存在
+            if (!totalIsHasKey) {
+                log.info("redis中不存在TOKEN信息，需要重新获取！");
 
-            redisTemplate.opsForValue().set(configKey, token);
-            redisTemplate.expire(configKey, 3333, TimeUnit.SECONDS);
+                String token = null;
+                String tokenUrl = sqjdtokenurl;
 
-            return token;
-        }else{
-            // 存在
-            String token = redisTemplate.opsForValue().get(configKey);
-            return token;
+                Map<String, String> map = new HashMap<>();
+                map.put("grant_type", client_credentials);
+                map.put("client_id", client_id);
+                map.put("client_secret",client_secret);
+                map.put("scope", scope);
+
+                token = HttpUtilsAll.post(tokenUrl, map).body();
+                log.info("请求省厅返回报文；"+token);
+                JSONObject tokenJson = JSONObject.parseObject(token);
+                String accessToken = tokenJson.getString("access_token");
+
+                redisTemplate.opsForValue().set(configKey, accessToken);
+                redisTemplate.expire(configKey, 3333, TimeUnit.SECONDS);
+                log.info("获取新TOKEN：" + accessToken + "差设置到redis中，redis过期时间为3333秒");
+
+                return accessToken;
+            } else {
+                // 存在
+                log.info("redis中存在TOKEN信息，直接读取！");
+                String accessToken = redisTemplate.opsForValue().get(configKey);
+                return accessToken;
+            }
+        } catch (IOException e) {
+            log.info("从redis中获取token异常！", e);
+            throw new RuntimeException("调用getProviceToken方法异常，从redis中获取token异常");
         }
     }
 }

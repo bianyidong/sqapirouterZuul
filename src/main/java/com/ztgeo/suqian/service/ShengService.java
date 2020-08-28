@@ -7,6 +7,7 @@ import com.ztgeo.suqian.utils.HttpUtilsAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,16 @@ public class ShengService {
     private ApiBaseInfoRepository apiBaseInfoRepository;
     @Autowired
     private StringRedisTemplate redisTemplate;
-
+    @Value(value = "${sqtoke.sqjdtokenurl}")
+    private String sqjdtokenurl;
+    @Value(value = "${sqtoke.sqjdtokenurl}")
+    private String client_credentials;
+    @Value(value = "${sqtoke.client_id}")
+    private String client_id;
+    @Value(value = "${sqtoke.client_secret}")
+    private String client_secret;
+    @Value(value = "${sqtoke.client_secret}")
+    private String scope;
 
     public String forwardservice(String param,String api_id){
 
@@ -73,18 +83,19 @@ public class ShengService {
 
             // 不存在
             if (!totalIsHasKey) {
-                log.info("redis中不存在TOKEN信息，需要重新获取！" );
+                log.info("redis中不存在TOKEN信息，需要重新获取！");
 
                 String token = null;
-                String tokenUrl = "https://2.211.38.98:8343/v1/apigw/oauth2/token";
+                String tokenUrl = sqjdtokenurl;
 
-                Map<String,String> map = new HashMap<>();
-                map.put("grant_type","client_credentials");
-                map.put("client_id","8947f32223bf4174bc7a014a96666ffc");
-                map.put("client_secret","2805d50ef71246d3a394e078ba4a68fc");
-                map.put("scope","default");
+                Map<String, String> map = new HashMap<>();
+                map.put("grant_type", client_credentials);
+                map.put("client_id", client_id);
+                map.put("client_secret",client_secret);
+                map.put("scope", scope);
 
-                token = HttpUtilsAll.post(tokenUrl,map).body();
+                token = HttpUtilsAll.post(tokenUrl, map).body();
+                log.info("请求省厅返回报文；"+token);
                 JSONObject tokenJson = JSONObject.parseObject(token);
                 String accessToken = tokenJson.getString("access_token");
 
@@ -93,14 +104,14 @@ public class ShengService {
                 log.info("获取新TOKEN：" + accessToken + "差设置到redis中，redis过期时间为3333秒");
 
                 return accessToken;
-            }else{
+            } else {
                 // 存在
-                log.info("redis中存在TOKEN信息，直接读取！" );
+                log.info("redis中存在TOKEN信息，直接读取！");
                 String accessToken = redisTemplate.opsForValue().get(configKey);
                 return accessToken;
             }
         } catch (IOException e) {
-            log.info("从redis中获取token异常！",e);
+            log.info("从redis中获取token异常！", e);
             throw new RuntimeException("调用getProviceToken方法异常，从redis中获取token异常");
         }
     }
