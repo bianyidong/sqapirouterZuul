@@ -4,23 +4,7 @@
     <list default="true" id="2e93136c-d37b-41ea-8edd-77ae8c271ee7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/RxdbService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/RxdbService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/ShengService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/ShengService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/apiRouterZuulGate-2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/apiRouterZuulGate-2.1.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/apiRouterZuulGate-2.1.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/controller/ManController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/controller/ManController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/AddRequestBodyFilter$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/AddRequestBodyFilter$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/AddRequestBodyFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/AddRequestBodyFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/RxdbService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/RxdbService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/ShengService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/ShengService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +49,7 @@
     <property name="RequestMappingsPanelWidth2" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../电子证照/江苏（靖江）电子证照/dzzzcore" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../电子证照/山东省电子证照/电子证照/后端/bdcDzzz-project" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -243,7 +227,7 @@
       <workItem from="1598921206281" duration="3211000" />
       <workItem from="1599013199904" duration="669000" />
       <workItem from="1605602841354" duration="2881000" />
-      <workItem from="1605660453409" duration="505000" />
+      <workItem from="1605660453409" duration="5745000" />
     </task>
     <task id="LOCAL-00001" summary="徐州省级过滤器">
       <created>1582521295416</created>
@@ -315,7 +299,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598585741362</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="提取省厅token配置">
+      <created>1605660977897</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1605660977897</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -330,19 +321,19 @@
     <option name="LAST_COMMIT_MESSAGE" value="提取省厅token配置" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="451" y="110" key="CommitChangelistDialog2" timestamp="1598585739928">
+    <state x="451" y="110" key="CommitChangelistDialog2" timestamp="1605660975981">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="451" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598585739928" />
+    <state x="451" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605660975981" />
     <state x="2371" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598323536855" />
     <state width="521" height="466" key="DebuggerActiveHint" timestamp="1598833183630">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="521" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598833183630" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1605660580088">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1605667659317">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605660580088" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605667659317" />
     <state width="1877" height="199" key="GridCell.Tab.0.bottom" timestamp="1598866509683">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -391,10 +382,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="260" key="GridCell.Tab.2.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598866509679" />
-    <state x="552" y="241" key="Vcs.Push.Dialog.v2" timestamp="1598585742943">
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2" timestamp="1605660982843">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598585742943" />
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605660982843" />
     <state x="2472" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598323538915" />
     <state x="636" y="253" width="660" height="534" key="find.popup" timestamp="1598832924267">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -405,16 +396,5 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2602" y="431" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598335721696" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java</url>
-          <line>85</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

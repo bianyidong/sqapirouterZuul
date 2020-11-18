@@ -41,6 +41,11 @@ public class CitySharedNotionalReqFilter extends ZuulFilter {
     private String client_secret;
     @Value(value = "${sqtoke.scope}")
     private String scope;
+    @Value(value = "${sqtoke.header_Secret}")
+    private String header_Secret;
+    @Value(value = "${sqtoke.header_bmd}")
+    private String header_bmd;
+
 
     @Resource
     private AGShareDao agShareDao;
@@ -101,10 +106,9 @@ public class CitySharedNotionalReqFilter extends ZuulFilter {
             toBeJiamiMap.put("ak", apiCitySharedConfig.getAk());
             toBeJiamiMap.put("appId", apiCitySharedConfig.getAppId());
             toBeJiamiMap.put("timestamp", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-            toBeJiamiMap.put("header_Secret", "5a9a0db0-387a-4daa-9aac-4ed9f70a50cb@3b91c09c2c254e3981466132faf8360d");
+            toBeJiamiMap.put("header_Secret", header_Secret);
             toBeJiamiMap.put("header_Authorization", token);
-            toBeJiamiMap.put("header_bmd","2.193.64.2");
-            System.out.println("token"+token);
+            toBeJiamiMap.put("header_bmd",header_bmd);
             toBeJiamiMap.put("method", "POST");
             for (Map.Entry<String, String[]> entry : requestMap.entrySet()) {
                 String mapKey = entry.getKey();
