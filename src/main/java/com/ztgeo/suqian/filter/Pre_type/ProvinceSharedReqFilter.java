@@ -49,13 +49,13 @@ public class ProvinceSharedReqFilter extends ZuulFilter {
     private StringRedisTemplate redisTemplate;
     @Value(value = "${sqtoke.sqjdtokenurl}")
     private String sqjdtokenurl;
-    @Value(value = "${sqtoke.sqjdtokenurl}")
-    private String client_credentials;
+    @Value(value = "${sqtoke.granttype}")
+    private String granttype;
     @Value(value = "${sqtoke.client_id}")
     private String client_id;
     @Value(value = "${sqtoke.client_secret}")
     private String client_secret;
-    @Value(value = "${sqtoke.client_secret}")
+    @Value(value = "${sqtoke.scope}")
     private String scope;
     @Override
     public String filterType() {
@@ -152,7 +152,7 @@ public class ProvinceSharedReqFilter extends ZuulFilter {
                 String tokenUrl = sqjdtokenurl;
 
                 Map<String, String> map = new HashMap<>();
-                map.put("grant_type", client_credentials);
+                map.put("grant_type", granttype);
                 map.put("client_id", client_id);
                 map.put("client_secret",client_secret);
                 map.put("scope", scope);

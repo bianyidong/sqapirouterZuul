@@ -54,3 +54,9 @@ customAttributes:
   httpName: "http_db"
 yxtokenpath: http://192.168.1.251:1104/public/oauth/token
 sqnankangkey: nankang
+sqtoke:
+  sqjdtokenurl: https://172.24.129.103:48343/v1/apigw/oauth2/token
+  granttype: client_credentials
+  client_id: 8947f32223bf4174bc7a014a96666ffc
+  client_secret: 2805d50ef71246d3a394e078ba4a68fc
+  scope: default
