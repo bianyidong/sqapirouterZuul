@@ -105,11 +105,14 @@ public class CitySharedNotionalReqFilter extends ZuulFilter {
             toBeJiamiMap.put("serviceId", apiCitySharedConfig.getServiceId());
             toBeJiamiMap.put("ak", apiCitySharedConfig.getAk());
             toBeJiamiMap.put("appId", apiCitySharedConfig.getAppId());
+            toBeJiamiMap.put("header_Content-Type","application/json;charset=utf-8");
             toBeJiamiMap.put("timestamp", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-            toBeJiamiMap.put("header_Secret", header_Secret);
-            toBeJiamiMap.put("header_Authorization", token);
-            toBeJiamiMap.put("header_bmd",header_bmd);
+            toBeJiamiMap.put("pageIndex","1");
+            toBeJiamiMap.put("pageSize","15");
             toBeJiamiMap.put("method", "POST");
+//            toBeJiamiMap.put("header_Secret", header_Secret);
+            toBeJiamiMap.put("header_Authorization", token);
+//            toBeJiamiMap.put("header_bmd",header_bmd);
             for (Map.Entry<String, String[]> entry : requestMap.entrySet()) {
                 String mapKey = entry.getKey();
                 String mapValue = StringArray2String(entry.getValue());

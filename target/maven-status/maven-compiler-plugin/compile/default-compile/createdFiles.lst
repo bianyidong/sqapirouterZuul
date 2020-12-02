@@ -63,6 +63,7 @@ com\ztgeo\suqian\msg\ResultMap.class
 com\ztgeo\suqian\entity\ag_datashare\DzYixing.class
 com\ztgeo\suqian\repository\agShare\ApiFlowInstRepository.class
 com\ztgeo\suqian\repository\agShare\ApiColMappingRepository.class
+com\ztgeo\suqian\service\testservice.class
 com\ztgeo\suqian\utils\RSAUtils.class
 com\ztgeo\suqian\filter\Pre_type\SafeToSignFilter.class
 com\ztgeo\suqian\filter\Pre_type\ProvinceSharedReqFilter$1.class

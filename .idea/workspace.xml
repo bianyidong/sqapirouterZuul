@@ -2,9 +2,142 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2e93136c-d37b-41ea-8edd-77ae8c271ee7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/service/testservice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/apiRouterZuulGate-2.1.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/ApiRouterApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/CryptographyConstants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/CryptographyOperation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/GlobalConstants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/SignKeyPair.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/ZtgeoBizRuntimeException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/ZtgeoBizZuulException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/common/initUserKeys.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/RedisConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/RedisOperator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/SwaggerConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/ZtgeoZuulConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/annotation/DataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/aop/DynamicDataSourceAnnotationAdvisor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/aop/DynamicDataSourceAnnotationInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/aop/DynamicDataSourceAspect.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/datasource/DynamicDataSourceContextHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/datasource/DynamicRoutingDataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/config/register/DynamicDataSourceRegister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/controller/ManController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/controller/ShengController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/controller/ashxController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/dao/AGLogDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/dao/AGShareDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/HttpEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiBaseInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiChangeType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiCitySharedConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiColMapping.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiFlowConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiFlowInst.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiIpWhitelistFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiJgtoPtFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiJsonKeyFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiNotionalSharedConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiRouterDefine.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiRouterFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiSqlConfigInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiTimeFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiUserFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/ApiUserMember.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/BaseUser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/DzYixing.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/NoticeBaseInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/NoticeRecord.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/NoticeUserReal.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_datashare/UserKeyInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/entity/ag_log/ApiAccessRecord.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Error_type/ErrorFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/JSONFieldFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/NationalSharedRespFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/ResponseFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/ResponseReceiveBodyFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/ResponseSafeAgainDataFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/ResponseSafeAgainSignFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/ResponseSafeToDataFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/ResponseSafeToSignFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Post_type/SuqianNanKangRespFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/AddRequestBodyFilter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/AddRequestBodyFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/BaseFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/CitySharedNotionalReqFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/CitySharedReqFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/FlowFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/FromUserFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/IPFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/NationalSharedReqFilter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/NationalSharedReqFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/ProvinceSharedReqFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SafeToDataFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SafeToSignFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SafefromDataFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SafefromSignFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SqlConfigReqFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SuqianNanKangReqFilter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/SuqianNanKangReqFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/TimeFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/Pre_type/TokenFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/ZtgeoRouteLocator$ZuulRouteVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/ZtgeoRouteLocator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/dz/YXLTReqDZFilter$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/dz/YXLTReqDZFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/filter/dz/YXLTRespDZFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/msg/CodeMsg.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/msg/ResultMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agLog/ApiAccessRecordRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiBaseInfoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiChangeTypeRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiCitySharedConfigRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiColMappingRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiFlowConfigRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiFlowInstRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiIpWhitelistFilterRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiJgtoPtFilterRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiJsonKeyFilterRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiNotionalSharedConfigRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiRouterDefineRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiSqlConfigInfoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiTimeFilterRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiUserFilterRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/ApiUserMemberRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/BaseUserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/DzYixingRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/NoticeBaseInfoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/NoticeRecordRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/NoticeUserRelRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/repository/agShare/UserKeyInfoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/rest/ErrorHandlerController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/rest/NoticeController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/rest/NoticeController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/rest/RouteController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/AshxService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/RxdbService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/service/ShengService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/CommonResponseEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/HttpClientUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/HttpOperation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/HttpUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/HttpUtilsAll$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/HttpUtilsAll$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/HttpUtilsAll.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/RSAUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/StreamOperateUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/StringUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/TimeCheckUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ztgeo/suqian/utils/XmlAndJsonUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/logback-spring.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +148,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -49,7 +183,7 @@
     <property name="RequestMappingsPanelWidth2" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../电子证照/山东省电子证照/电子证照/后端/bdcDzzz-project" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -70,7 +204,7 @@
       <recent name="E:\File\DataSharingServer\NewDataShringServer\doubleDatasource-85服务器\apiRouterZuulGate\src\main\java\com\ztgeo\suqian\utils" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.testservice">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -80,6 +214,20 @@
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="testservice" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ztgeo.suqian.service.testservice" />
+      <module name="apiRouterZuulGate" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ztgeo.suqian.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -116,6 +264,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.testservice" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -227,7 +380,13 @@
       <workItem from="1598921206281" duration="3211000" />
       <workItem from="1599013199904" duration="669000" />
       <workItem from="1605602841354" duration="2881000" />
-      <workItem from="1605660453409" duration="5745000" />
+      <workItem from="1605660453409" duration="6269000" />
+      <workItem from="1605679936808" duration="2919000" />
+      <workItem from="1605843082586" duration="1008000" />
+      <workItem from="1606123279494" duration="1353000" />
+      <workItem from="1606179555891" duration="5357000" />
+      <workItem from="1606361013827" duration="14217000" />
+      <workItem from="1606885560704" duration="3021000" />
     </task>
     <task id="LOCAL-00001" summary="徐州省级过滤器">
       <created>1582521295416</created>
@@ -306,7 +465,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605660977897</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="提取省厅token配置">
+      <created>1605676233074</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1605676233074</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -321,35 +487,35 @@
     <option name="LAST_COMMIT_MESSAGE" value="提取省厅token配置" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="451" y="110" key="CommitChangelistDialog2" timestamp="1605660975981">
+    <state x="451" y="110" key="CommitChangelistDialog2" timestamp="1605676232169">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="451" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605660975981" />
+    <state x="451" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605676232169" />
     <state x="2371" y="110" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598323536855" />
     <state width="521" height="466" key="DebuggerActiveHint" timestamp="1598833183630">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="521" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598833183630" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1605667659317">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1606438256651">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605667659317" />
-    <state width="1877" height="199" key="GridCell.Tab.0.bottom" timestamp="1598866509683">
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606438256651" />
+    <state width="1877" height="272" key="GridCell.Tab.0.bottom" timestamp="1606889266791">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="199" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598866509683" />
-    <state width="1877" height="199" key="GridCell.Tab.0.center" timestamp="1598866509683">
+    <state width="1877" height="272" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606889266791" />
+    <state width="1877" height="272" key="GridCell.Tab.0.center" timestamp="1606889266791">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="199" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598866509683" />
-    <state width="1877" height="199" key="GridCell.Tab.0.left" timestamp="1598866509683">
+    <state width="1877" height="272" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606889266791" />
+    <state width="1877" height="272" key="GridCell.Tab.0.left" timestamp="1606889266791">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="199" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598866509683" />
-    <state width="1877" height="199" key="GridCell.Tab.0.right" timestamp="1598866509683">
+    <state width="1877" height="272" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606889266791" />
+    <state width="1877" height="272" key="GridCell.Tab.0.right" timestamp="1606889266791">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="199" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598866509683" />
+    <state width="1877" height="272" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606889266791" />
     <state width="1877" height="260" key="GridCell.Tab.1.bottom" timestamp="1598866509679">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -382,15 +548,15 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="260" key="GridCell.Tab.2.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598866509679" />
-    <state x="552" y="241" key="Vcs.Push.Dialog.v2" timestamp="1605660982843">
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2" timestamp="1605676234293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605660982843" />
+    <state x="552" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605676234293" />
     <state x="2472" y="241" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1598323538915" />
-    <state x="636" y="253" width="660" height="534" key="find.popup" timestamp="1598832924267">
+    <state x="636" y="253" width="660" height="534" key="find.popup" timestamp="1606885893682">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="636" y="253" width="660" height="534" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1598832924267" />
+    <state x="636" y="253" width="660" height="534" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606885893682" />
     <state x="636" y="253" width="660" height="534" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598495864761" />
     <state x="2602" y="431" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1598335721696">
       <screen x="1920" y="0" width="1920" height="1040" />
