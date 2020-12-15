@@ -5,9 +5,12 @@ import com.isoftstone.sign.SignGeneration;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import com.ztgeo.suqian.common.GlobalConstants;
 import com.ztgeo.suqian.dao.AGShareDao;
+import com.ztgeo.suqian.entity.ag_datashare.ApiBaseInfo;
 import com.ztgeo.suqian.entity.ag_datashare.ApiCitySharedConfig;
 import com.ztgeo.suqian.repository.agShare.ApiCitySharedConfigRepository;
+import com.ztgeo.suqian.utils.HttpClientUtil;
 import com.ztgeo.suqian.utils.HttpUtilsAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -105,14 +109,13 @@ public class CitySharedNotionalReqFilter extends ZuulFilter {
             toBeJiamiMap.put("serviceId", apiCitySharedConfig.getServiceId());
             toBeJiamiMap.put("ak", apiCitySharedConfig.getAk());
             toBeJiamiMap.put("appId", apiCitySharedConfig.getAppId());
-            toBeJiamiMap.put("header_Content-Type","application/json;charset=utf-8");
             toBeJiamiMap.put("timestamp", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-            toBeJiamiMap.put("pageIndex","1");
-            toBeJiamiMap.put("pageSize","15");
             toBeJiamiMap.put("method", "POST");
 //            toBeJiamiMap.put("header_Secret", header_Secret);
             toBeJiamiMap.put("header_Authorization", token);
 //            toBeJiamiMap.put("header_bmd",header_bmd);
+
+
             for (Map.Entry<String, String[]> entry : requestMap.entrySet()) {
                 String mapKey = entry.getKey();
                 String mapValue = StringArray2String(entry.getValue());
@@ -124,24 +127,33 @@ public class CitySharedNotionalReqFilter extends ZuulFilter {
             String sign = SignGeneration.generationSign(toBeJiamiMap, sk);
             toBeJiamiMap.put("sign", sign);
             log.info("加密值<sign>：" + sign);
-
+            ApiBaseInfo apiBaseInfo = agShareDao.findApiBaseInfosByApiIdEquals(api_id).get(0);
+            String url = apiBaseInfo.getBaseUrl() + apiBaseInfo.getPath();
             // 一定要get一下,下面这行代码才能取到值... [注1]
             // httpServletRequest.getParameterMap();
-            Map<String, List<String>> requestQueryParams = requestContext.getRequestQueryParams();
-
-            if (requestQueryParams == null) {
-                requestQueryParams = new HashMap<>();
+//            Map<String, List<String>> requestQueryParams = requestContext.getRequestQueryParams();
+//
+//            if (requestQueryParams == null) {
+//                requestQueryParams = new HashMap<>();
+//            }
+//
+//            for (Map.Entry<String, String> entry : toBeJiamiMap.entrySet()) {
+//                requestQueryParams.put(entry.getKey(), String2List(entry.getValue()));
+//            }
+            String result = null;
+            log.info("已加签，待转发map<requestQueryParams>：" + toBeJiamiMap);
+            result = HttpClientUtil.httpPostRequest(url, toBeJiamiMap);
+            if (!StringUtils.isEmpty(result)) {
+                requestContext.set(GlobalConstants.ISSUCCESS, "success");
+            } else {
+                requestContext.set(GlobalConstants.ISSUCCESS, "false");
             }
-
-            for (Map.Entry<String, String> entry : toBeJiamiMap.entrySet()) {
-                requestQueryParams.put(entry.getKey(), String2List(entry.getValue()));
-            }
-
-            log.info("已加签，待转发map<requestQueryParams>：" + requestQueryParams);
+            requestContext.setResponseBody(result);
+            requestContext.setSendZuulResponse(false);
 
         } catch (Exception e) {
-            log.info("30015-转发市级共享接口异常", e);
-            throw new RuntimeException("30015-转发市级共享接口异常");
+            log.info("30015-转发京东云市级代理省级接口异常", e);
+            throw new RuntimeException("30015-转发京东云市级代理省级接口异常");
         }
         return null;
     }

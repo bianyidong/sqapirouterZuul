@@ -4,6 +4,7 @@ com\ztgeo\suqian\entity\ag_datashare\NoticeRecord.class
 com\ztgeo\suqian\controller\ManController.class
 com\ztgeo\suqian\entity\HttpEntity.class
 com\ztgeo\suqian\repository\agShare\ApiNotionalSharedConfigRepository.class
+com\ztgeo\suqian\service\TestsqService.class
 com\ztgeo\suqian\entity\ag_datashare\UserKeyInfo.class
 com\ztgeo\suqian\msg\CodeMsg.class
 com\ztgeo\suqian\config\RedisConfig.class
@@ -63,7 +64,6 @@ com\ztgeo\suqian\msg\ResultMap.class
 com\ztgeo\suqian\entity\ag_datashare\DzYixing.class
 com\ztgeo\suqian\repository\agShare\ApiFlowInstRepository.class
 com\ztgeo\suqian\repository\agShare\ApiColMappingRepository.class
-com\ztgeo\suqian\service\testservice.class
 com\ztgeo\suqian\utils\RSAUtils.class
 com\ztgeo\suqian\filter\Pre_type\SafeToSignFilter.class
 com\ztgeo\suqian\filter\Pre_type\ProvinceSharedReqFilter$1.class
@@ -111,6 +111,7 @@ com\ztgeo\suqian\filter\Pre_type\SafefromSignFilter.class
 com\ztgeo\suqian\entity\ag_datashare\ApiRouterFilter.class
 com\ztgeo\suqian\filter\Pre_type\NationalSharedReqFilter$1.class
 com\ztgeo\suqian\rest\NoticeController.class
+com\ztgeo\suqian\controller\sqTestController.class
 com\ztgeo\suqian\filter\Pre_type\NationalSharedReqFilter.class
 com\ztgeo\suqian\filter\Pre_type\AddRequestBodyFilter$1.class
 com\ztgeo\suqian\entity\ag_datashare\ApiUserMember.class

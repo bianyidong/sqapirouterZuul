@@ -68,7 +68,7 @@ public class CitySharedReqFilter extends ZuulFilter {
 
     @Override
     public Object run() throws ZuulException {
-
+        log.info("--------------进入京东云市本级接口过滤器------------------");
         try {
             RequestContext requestContext = RequestContext.getCurrentContext();
             HttpServletRequest httpServletRequest = requestContext.getRequest();
