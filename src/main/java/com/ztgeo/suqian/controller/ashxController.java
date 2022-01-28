@@ -38,7 +38,7 @@ public class ashxController {
             log.info("api_id：" + api_id);
             String respStr = ashxService.wardservice(param,api_id);
             log.info("响应报文：" + respStr);
-            log.info("--------------------结束----调用转发接口---------------------");
+            log.info("--------------------结束------调用转发接口---------------------");
             return respStr;
         }
     }
